@@ -35,7 +35,14 @@ jobs:
         shell: bash
         run: |
           if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
-            node -e "const fs=require('node:fs'); const packagePath='package.json'; const packageJson=JSON.parse(fs.readFileSync(packagePath, 'utf8')); const stableVersion=packageJson.version.split('-')[0]; packageJson.version=`${stableVersion}-dev.${process.env.GITHUB_RUN_NUMBER}`; fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + '\n');"
+            node <<'NODE'
+            const fs = require("node:fs");
+            const packagePath = "package.json";
+            const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf8"));
+            const stableVersion = packageJson.version.split("-")[0];
+            packageJson.version = `${stableVersion}-dev.${process.env.GITHUB_RUN_NUMBER}`;
+            fs.writeFileSync(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`);
+            NODE
             echo "tag=prerelease" >> "$GITHUB_OUTPUT"
           else
             echo "tag=latest" >> "$GITHUB_OUTPUT"
