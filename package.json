@@ -1,18 +1,17 @@
 {
-  "name": "meting-mcp",
+  "name": "@eldment/meting-mcp",
   "version": "1.6.1",
   "description": "MCP server wrapper for the Meting multi-platform music API core.",
   "type": "module",
   "main": "./src/mcp-server.js",
-  "bin": {
-    "meting-mcp": "./src/index.js"
-  },
+  "bin": "./src/index.js",
   "exports": {
     ".": "./src/mcp-server.js"
   },
   "files": [
     "src",
     "README.md",
+    "ACKNOWLEDGEMENTS.md",
     "LICENSE"
   ],
   "scripts": {

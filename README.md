@@ -1,77 +1,54 @@
-# meting-mcp
+# Meting-MCP
 
-`meting-mcp` 基于原版 **Meting Node.js** 核心实现，只保留适合 MCP Server 发布与运行的形态。底层支持这些平台：
+`Meting-MCP` 是基于 **[metowolf/Meting](https://github.com/metowolf/Meting)** 构建的 MCP Server，支持 `netease`、`tencent`、`kugou`、`baidu`、`kuwo` 等音乐平台，提供搜索、歌曲、专辑、歌手、歌单、播放链接、歌词、封面等能力
 
-- `netease`
-- `tencent`
-- `kugou`
-- `baidu`
-- `kuwo`
+## 提供的 MCP 工具
 
-## 功能概览
-
-- 基于原版 Meting 的统一音乐接口
-- 通过 stdio 暴露为 MCP Server
-- 支持搜索、歌曲、专辑、歌手、歌单、播放链接、歌词、封面等操作
-- 所有 MCP 工具默认返回格式化后的 JSON 文本
-
-## 安装
-
-```bash
-npm install
-```
-
-发布后可直接运行：
-
-```bash
-npx meting-mcp
-```
+- `platforms`: 列出当前支持的音乐平台及其平台代号
+- `search`: 按关键字在指定平台搜索歌曲、专辑、歌手或其他资源
+- `song`: 按歌曲 ID 获取歌曲详情
+- `album`: 按专辑 ID 获取专辑详情
+- `artist`: 按歌手 ID 获取歌手信息或作品列表
+- `playlist`: 按歌单 ID 获取歌单内容
+- `url`: 按歌曲 ID 获取可播放链接
+- `lyric`: 按歌曲 ID 获取歌词内容
+- `pic`: 按图片或资源 ID 获取封面图链接
 
 ## MCP 接入
 
-示例配置：
+Claude 示例配置：
 
 ```json
 {
   "mcpServers": {
     "meting": {
       "command": "npx",
-      "args": ["-y", "meting-mcp"]
+      "args": [
+        "-y",
+        "@eldment/meting-mcp@latest"
+      ],
+      "env": {},
+      "timeout": 60000
     }
   }
 }
 ```
 
-提供的 MCP 工具：
+Codex 示例配置：
 
-- `platforms`
-- `search`
-- `song`
-- `album`
-- `artist`
-- `playlist`
-- `url`
-- `lyric`
-- `pic`
+```toml
+[mcp_servers.meting]
+type = "stdio"
+command = "npx"
+args = [
+    "-y",
+    "@eldment/meting-mcp@latest",
+]
+env = {}
+tool_timeout_sec = 60
+disabled = false
+```
 
-## 工具参数
+---
 
-所有工具都支持：
-
-- `platform`: `netease`、`tencent`、`kugou`、`baidu`、`kuwo`
-- `cookie`: 可选，对应平台 Cookie
-
-各工具额外参数：
-
-- `search`: `keyword`，可选 `type`、`page`、`limit`
-- `song`: `id`
-- `album`: `id`
-- `artist`: `id`，可选 `limit`
-- `playlist`: `id`
-- `url`: `id`，可选 `br`
-- `lyric`: `id`
-- `pic`: `id`，可选 `size`
-
-## 版权与致谢
-
-底层核心来自原项目 [metowolf/Meting](https://github.com/metowolf/Meting)，遵循 [MIT](./LICENSE) License。
+关键词: MCP Server | Model Context Protocol | Music API | Node.js MCP | AI Tool Integration | NetEase Cloud Music | Tencent QQ Music | KuGou Music | Baidu Music | Kuwo Music | Lyrics API | Playlist API

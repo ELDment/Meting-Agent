@@ -2,4 +2,6 @@ node_modules/
 lib/
 *.tgz
 .tmp/
+.inspect/
+.probe/
 npm-debug.log*
