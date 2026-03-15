@@ -1,85 +1,50 @@
-# Meting-MCP
+# Meting-Agent
 
-`Meting-MCP` 是基于 **[metowolf/Meting](https://github.com/metowolf/Meting)** 构建的 MCP Server，支持 [网易云音乐](https://music.163.com/)（`netease`）、[腾讯音乐](https://y.qq.com/)（`tencent`）、[酷狗音乐](https://www.kugou.com/)（`kugou`）、[千千音乐](https://music.taihe.com/)（`baidu`）、[酷我音乐](https://www.kuwo.cn/)（`kuwo`） 等音乐平台，提供搜索、歌曲、专辑、歌手、歌单、播放链接、歌词、封面等能力
+`Meting-Agent` 维护两套运行时独立的交付物：
 
-## 提供的 MCP 工具
+- `mcp/`：可发布的 Node.js MCP Server，对外名称统一为 `Meting Agent`。
+- `skills/meting-agent/`：面向 Codex 的 skill 源文件，最终以 GitHub Release 资产分发。
 
-- `platforms`: 列出当前支持的音乐平台及其平台代号
-- `search`: 按关键字在指定平台搜索歌曲、专辑、歌手或其他资源
-- `song`: 按歌曲 ID 获取歌曲详情
-- `album`: 按专辑 ID 获取专辑详情
-- `artist`: 按歌手 ID 获取歌手信息或作品列表
-- `playlist`: 按歌单 ID 获取歌单内容
-- `url`: 按歌曲 ID 获取可播放链接
-- `lyric`: 按歌曲 ID 获取歌词内容
-- `pic`: 按图片或资源 ID 获取封面图链接
+## 目录说明
 
-## MCP 接入
+- `shared/core-src/`：唯一的核心源码来源，包含 `meting.js` 和全部 providers。
+- `mcp/`：MCP Server 运行时副本与发布配置。
+- `skills/meting-agent/`：skill 元数据与静态脚本源文件。
+- `scripts/sync-mcp-core.mjs`：把共享核心生成到 `mcp/src/`。
+- `scripts/build-skill-release.mjs`：构建可下载的 skill release bundle。
 
-Claude 示例配置：
+## 常用命令
 
-```json
-{
-  "mcpServers": {
-    "meting": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@eldment/meting-mcp@latest"
-      ],
-      "env": {
-        "METING_NETEASE_COOKIE": "__csrf=...; MUSIC_U=...; NMTID=...; __remember_me=true;",
-        "METING_TENCENT_COOKIE": "uin=...; qm_keyst=...; qqmusic_key=...;",
-        "METING_KUGOU_COOKIE": "KugooID=...; t=...; dfid=...; mid=...;",
-        "METING_BAIDU_COOKIE": "...",
-        "METING_KUWO_COOKIE": "..."
-      },
-      "timeout": 60000
-    }
-  }
-}
+同步共享核心到 MCP：
+
+```powershell
+node scripts/sync-mcp-core.mjs
 ```
 
-Codex 示例配置：
+构建 skill release bundle：
 
-```toml
-[mcp_servers.meting]
-type = "stdio"
-command = "npx"
-args = [
-    "-y",
-    "@eldment/meting-mcp@latest",
-]
-env = {
-    METING_NETEASE_COOKIE = "__csrf=...; MUSIC_U=...; NMTID=...; __remember_me=true;",
-    METING_TENCENT_COOKIE = "uin=...; qm_keyst=...; qqmusic_key=...;",
-    METING_KUGOU_COOKIE = "KugooID=...; t=...; dfid=...; mid=...;",
-    METING_BAIDU_COOKIE = "...",
-    METING_KUWO_COOKIE = "...",
-}
-tool_timeout_sec = 60
-disabled = false
+```powershell
+node scripts/build-skill-release.mjs
 ```
 
-## Cookie 配置
+验证 MCP 子项目：
 
-MCP 运行时会优先从环境变量读取 cookie，再回退到工具输入参数传入的 cookie，优先级如下：
+```powershell
+cd mcp
+npm install
+npm run verify
+```
 
-1. `METING_<PLATFORM>_COOKIE`
-2. `METING_COOKIE`
-3. MCP 工具调用时传入的 `cookie`
+本地验证 skill release bundle：
 
-当前支持的环境变量：
+```powershell
+node scripts/build-skill-release.mjs
+node dist/meting-agent-skill/scripts/meting-cli.mjs platforms
+node dist/meting-agent-skill/scripts/meting-cli.mjs search --platform netease --keyword "我怀念的" --limit 3
+```
 
-- `METING_NETEASE_COOKIE`
-- `METING_TENCENT_COOKIE`
-- `METING_KUGOU_COOKIE`
-- `METING_BAIDU_COOKIE`
-- `METING_KUWO_COOKIE`
-- `METING_COOKIE`（通用）
+## 维护原则
 
-如果只需要给某一个平台带 cookie，优先使用对应的平台变量；如果想统一兜底，可以只设置 `METING_COOKIE`
-
----
-
-关键词: MCP Server | Model Context Protocol | Music API | Node.js MCP | AI Tool Integration | NetEase Cloud Music | Tencent QQ Music | KuGou Music | Baidu Music | Kuwo Music | Lyrics API | Playlist API
+- 只在 `shared/core-src/` 修改核心实现。
+- `mcp/src/meting.js` 和 `mcp/src/providers/` 由同步脚本生成，不直接维护。
+- skill 的运行时副本只在 `dist/meting-agent-skill/` 构建时生成，用户从 GitHub Release 下载，不克隆源码仓库。
