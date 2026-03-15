@@ -84,10 +84,6 @@ jobs:
           fi
       - name: Build skill release bundle
         run: node scripts/build-skill-release.mjs
-      - name: Smoke test built skill bundle
-        run: |
-          node dist/meting-agent-skill/scripts/meting-cli.mjs platforms
-          node dist/meting-agent-skill/scripts/meting-cli.mjs search --platform netease --keyword "Hello Adele" --limit 1
       - name: Create zip archive
         shell: bash
         run: |

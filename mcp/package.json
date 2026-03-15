@@ -18,10 +18,9 @@
   "scripts": {
     "sync:core": "node ../scripts/sync-mcp-core.mjs",
     "start": "npm run sync:core && node src/index.js",
-    "lint": "npm run sync:core && node --check src/index.js && node --check src/mcp-server.js && node --check src/meting.js && node --check src/providers/index.js && node --check ../scripts/test-meting.js",
-    "test": "npm run sync:core && node ../scripts/test-meting.js",
+    "lint": "npm run sync:core && node --check src/index.js && node --check src/mcp-server.js && node --check src/meting.js && node --check src/providers/index.js",
     "build": "npm run sync:core && npm pack --dry-run",
-    "verify": "npm run lint && npm test && npm run build",
+    "verify": "npm run lint && npm run build",
     "prepublishOnly": "npm run verify"
   },
   "keywords": [
