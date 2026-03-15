@@ -1,10 +1,20 @@
+import { createRequire } from "module";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import * as z from "zod/v4";
 import Meting from "./meting.js";
 
+const require = createRequire(import.meta.url);
+const { name: packageName, version } = require("../package.json");
+
+const packageUrl = `https://www.npmjs.com/package/${packageName}`;
+
 export const serviceMetadata = Object.freeze({
   name: "meting-mcp",
-  version: "1.6.2",
+  version,
+  title: "Meting MCP",
+  description:
+    "Search music and fetch song, album, artist, playlist, lyrics, cover, and play URL data across NetEase, Tencent, KuGou, Baidu, and Kuwo.",
+  websiteUrl: packageUrl,
 });
 
 const platformCatalog = Object.freeze([
@@ -104,11 +114,11 @@ function WithCommonInput(extraSchema) {
   };
 }
 
-function RegisterTool(server, toolName, description, inputSchema, handler) {
+function RegisterTool(server, toolName, title, description, inputSchema, handler) {
   server.registerTool(
     toolName,
     {
-      title: toolName,
+      title,
       description,
       inputSchema,
     },
@@ -129,7 +139,7 @@ export function CreateMcpServer() {
   server.registerTool(
     "platforms",
     {
-      title: "platforms",
+      title: "List Supported Platforms",
       description: "List supported music platforms.",
     },
     async () => {
@@ -143,6 +153,7 @@ export function CreateMcpServer() {
   RegisterTool(
     server,
     "search",
+    "Search Music",
     "Search songs, albums or artists on a specific platform.",
     WithCommonInput({
       keyword: z.string().min(1).describe("Search keyword."),
@@ -178,6 +189,7 @@ export function CreateMcpServer() {
   RegisterTool(
     server,
     "song",
+    "Get Song Details",
     "Get song detail by id.",
     WithCommonInput({
       id: z.string().min(1).describe("Song id."),
@@ -191,6 +203,7 @@ export function CreateMcpServer() {
   RegisterTool(
     server,
     "album",
+    "Get Album Details",
     "Get album detail by id.",
     WithCommonInput({
       id: z.string().min(1).describe("Album id."),
@@ -204,6 +217,7 @@ export function CreateMcpServer() {
   RegisterTool(
     server,
     "artist",
+    "Get Artist Works",
     "Get artist songs by id.",
     WithCommonInput({
       id: z.string().min(1).describe("Artist id."),
@@ -218,6 +232,7 @@ export function CreateMcpServer() {
   RegisterTool(
     server,
     "playlist",
+    "Get Playlist Details",
     "Get playlist detail by id.",
     WithCommonInput({
       id: z.string().min(1).describe("Playlist id."),
@@ -231,6 +246,7 @@ export function CreateMcpServer() {
   RegisterTool(
     server,
     "url",
+    "Get Play URL",
     "Get playable song url by id.",
     WithCommonInput({
       id: z.string().min(1).describe("Song id."),
@@ -238,7 +254,6 @@ export function CreateMcpServer() {
     }),
     async (input) => {
       const meting = CreateClient(input.platform, input.cookie);
-      WithCommonInput;
       return ParseResult(await meting.url(input.id, input.br));
     }
   );
@@ -246,6 +261,7 @@ export function CreateMcpServer() {
   RegisterTool(
     server,
     "lyric",
+    "Get Lyrics",
     "Get song lyric by id.",
     WithCommonInput({
       id: z.string().min(1).describe("Song id."),
@@ -259,6 +275,7 @@ export function CreateMcpServer() {
   RegisterTool(
     server,
     "pic",
+    "Get Cover Image",
     "Get cover or picture url by id.",
     WithCommonInput({
       id: z.string().min(1).describe("Picture id."),
