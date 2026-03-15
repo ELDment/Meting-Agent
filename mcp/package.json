@@ -1,0 +1,65 @@
+{
+  "name": "@eldment/meting-agent",
+  "version": "1.6.5",
+  "description": "Meting Agent server for multi-platform music lookup.",
+  "type": "module",
+  "main": "./src/mcp-server.js",
+  "bin": {
+    "meting-agent": "./src/index.js"
+  },
+  "exports": {
+    ".": "./src/mcp-server.js"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "sync:core": "node ../scripts/sync-mcp-core.mjs",
+    "start": "npm run sync:core && node src/index.js",
+    "lint": "npm run sync:core && node --check src/index.js && node --check src/mcp-server.js && node --check src/meting.js && node --check src/providers/index.js && node --check ../test/test.js && node --check ../test/example.js",
+    "test": "npm run sync:core && node ../test/test.js",
+    "example": "npm run sync:core && node ../test/example.js",
+    "build": "npm run sync:core && npm pack --dry-run",
+    "verify": "npm run lint && npm test && npm run build",
+    "prepublishOnly": "npm run verify"
+  },
+  "keywords": [
+    "mcp",
+    "music",
+    "api",
+    "netease",
+    "tencent",
+    "kugou",
+    "baidu",
+    "kuwo",
+    "nodejs",
+    "music-api",
+    "search",
+    "lyrics"
+  ],
+  "author": {
+    "name": "ELDment",
+    "url": "https://github.com/ELDment"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/ELDment/Meting-Agent",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ELDment/Meting-Agent.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ELDment/Meting-Agent/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "zod": "^4.3.6"
+  }
+}

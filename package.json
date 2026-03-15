@@ -1,66 +1,12 @@
 {
-  "name": "@eldment/meting-mcp",
-  "version": "1.6.5",
-  "description": "MCP server wrapper for the Meting multi-platform music API core.",
+  "name": "meting-agent-repo",
+  "private": true,
   "type": "module",
-  "main": "./src/mcp-server.js",
-  "bin": "./src/index.js",
-  "exports": {
-    ".": "./src/mcp-server.js"
-  },
-  "files": [
-    "src",
-    "README.md",
-    "ACKNOWLEDGEMENTS.md",
-    "LICENSE"
-  ],
   "scripts": {
-    "start": "node src/index.js",
-    "lint": "node --check src/index.js && node --check src/mcp-server.js && node --check src/meting.js && node --check src/providers/index.js && node --check test/test.js && node --check test/example.js",
+    "sync:mcp": "node scripts/sync-mcp-core.mjs",
+    "build:skill": "node scripts/build-skill-release.mjs",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "test": "node test/test.js",
-    "example": "node test/example.js",
-    "build": "npm pack --dry-run",
-    "verify": "npm run lint && npm test && npm run build",
-    "prepublishOnly": "npm run verify"
-  },
-  "keywords": [
-    "mcp",
-    "music",
-    "api",
-    "netease",
-    "tencent",
-    "kugou",
-    "baidu",
-    "kuwo",
-    "nodejs",
-    "music-api",
-    "search",
-    "lyrics"
-  ],
-  "author": {
-    "name": "ELDment",
-    "url": "https://github.com/ELDment"
-  },
-  "license": "MIT",
-  "homepage": "https://github.com/ELDment/Meting-MCP",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ELDment/Meting-MCP.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ELDment/Meting-MCP/issues"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.27.1",
-    "zod": "^4.3.6"
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "prettier": "^3.6.2"

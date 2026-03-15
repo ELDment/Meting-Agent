@@ -5,14 +5,14 @@ import { CreateMcpServer, serviceMetadata } from "./mcp-server.js";
 
 function GetHelpText() {
   return [
-    "meting-mcp",
+    "meting-agent",
     "",
-    "MCP server wrapper for the Meting multi-platform music API core.",
+    "Meting Agent server for multi-platform music lookup.",
     "",
     "Usage:",
-    "  meting-mcp            Start the MCP stdio server",
-    "  meting-mcp --help     Show help",
-    "  meting-mcp --version  Show version",
+    "  meting-agent            Start the MCP stdio server",
+    "  meting-agent --help     Show help",
+    "  meting-agent --version  Show version",
   ].join("\n");
 }
 
@@ -49,7 +49,7 @@ async function Main() {
 
 Main().catch((error) => {
   process.stderr.write(
-    `meting-mcp failed to start: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}\n`
+    `meting-agent failed to start: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}\n`
   );
   process.exit(1);
 });

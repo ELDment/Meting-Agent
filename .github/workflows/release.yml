@@ -1,0 +1,56 @@
+name: release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        working-directory: mcp
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+      - run: node scripts/sync-mcp-core.mjs
+      - run: npm ci
+      - run: npm run verify
+      - run: npm publish --provenance --access public
+
+  release-skill:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Build skill release bundle
+        run: node scripts/build-skill-release.mjs
+      - name: Smoke test built skill bundle
+        run: |
+          node dist/meting-agent-skill/scripts/meting-cli.mjs platforms
+          node dist/meting-agent-skill/scripts/meting-cli.mjs search --platform netease --keyword "我怀念的" --limit 1
+      - name: Create zip archive
+        run: |
+          cd dist
+          zip -r "meting-agent-skill-${GITHUB_REF_NAME}.zip" meting-agent-skill
+      - name: Publish GitHub release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          asset="dist/meting-agent-skill-${GITHUB_REF_NAME}.zip"
+          if gh release view "${GITHUB_REF_NAME}" > /dev/null 2>&1; then
+            gh release upload "${GITHUB_REF_NAME}" "$asset" --clobber
+          else
+            gh release create "${GITHUB_REF_NAME}" "$asset" --title "${GITHUB_REF_NAME}" --generate-notes
+          fi
