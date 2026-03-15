@@ -1,4 +1,4 @@
-import BaseProvider from './base.js';
+import BaseProvider from "./base.js";
 
 /**
  * 腾讯音乐平台提供者
@@ -6,7 +6,7 @@ import BaseProvider from './base.js';
 export default class TencentProvider extends BaseProvider {
   constructor(meting) {
     super(meting);
-    this.name = 'tencent';
+    this.name = "tencent";
   }
 
   /**
@@ -14,13 +14,14 @@ export default class TencentProvider extends BaseProvider {
    */
   getHeaders() {
     return {
-      'Referer': 'http://y.qq.com',
-      'Cookie': 'pgv_pvi=22038528; pgv_si=s3156287488; pgv_pvid=5535248600; yplayer_open=1; ts_last=y.qq.com/portal/player.html; ts_uid=4847550686; yq_index=0; qqmusic_fromtag=66; player_exist=1',
-      'User-Agent': 'QQ%E9%9F%B3%E4%B9%90/54409 CFNetwork/901.1 Darwin/17.6.0 (x86_64)',
-      'Accept': '*/*',
-      'Accept-Language': 'zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4',
-      'Connection': 'keep-alive',
-      'Content-Type': 'application/x-www-form-urlencoded'
+      Referer: "http://y.qq.com",
+      Cookie:
+        "pgv_pvi=22038528; pgv_si=s3156287488; pgv_pvid=5535248600; yplayer_open=1; ts_last=y.qq.com/portal/player.html; ts_uid=4847550686; yq_index=0; qqmusic_fromtag=66; player_exist=1",
+      "User-Agent": "QQ%E9%9F%B3%E4%B9%90/54409 CFNetwork/901.1 Darwin/17.6.0 (x86_64)",
+      Accept: "*/*",
+      "Accept-Language": "zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4",
+      Connection: "keep-alive",
+      "Content-Type": "application/x-www-form-urlencoded",
     };
   }
 
@@ -29,19 +30,19 @@ export default class TencentProvider extends BaseProvider {
    */
   search(keyword, option = {}) {
     return {
-      method: 'GET',
-      url: 'https://c.y.qq.com/soso/fcgi-bin/client_search_cp',
+      method: "GET",
+      url: "https://c.y.qq.com/soso/fcgi-bin/client_search_cp",
       body: {
-        format: 'json',
+        format: "json",
         p: option.page || 1,
         n: option.limit || 30,
         w: keyword,
         aggr: 1,
         lossless: 1,
         cr: 1,
-        new_json: 1
+        new_json: 1,
       },
-      format: 'data.song.list'
+      format: "data.song.list",
     };
   }
 
@@ -50,14 +51,14 @@ export default class TencentProvider extends BaseProvider {
    */
   song(id) {
     return {
-      method: 'GET',
-      url: 'https://c.y.qq.com/v8/fcg-bin/fcg_play_single_song.fcg',
+      method: "GET",
+      url: "https://c.y.qq.com/v8/fcg-bin/fcg_play_single_song.fcg",
       body: {
         songmid: id,
-        platform: 'yqq',
-        format: 'json'
+        platform: "yqq",
+        format: "json",
       },
-      format: 'data'
+      format: "data",
     };
   }
 
@@ -66,15 +67,15 @@ export default class TencentProvider extends BaseProvider {
    */
   album(id) {
     return {
-      method: 'GET',
-      url: 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_album_detail_cp.fcg',
+      method: "GET",
+      url: "https://c.y.qq.com/v8/fcg-bin/fcg_v8_album_detail_cp.fcg",
       body: {
         albummid: id,
-        platform: 'mac',
-        format: 'json',
-        newsong: 1
+        platform: "mac",
+        format: "json",
+        newsong: 1,
       },
-      format: 'data.getSongInfo'
+      format: "data.getSongInfo",
     };
   }
 
@@ -83,17 +84,17 @@ export default class TencentProvider extends BaseProvider {
    */
   artist(id, limit = 50) {
     return {
-      method: 'GET',
-      url: 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg',
+      method: "GET",
+      url: "https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg",
       body: {
         singermid: id,
         begin: 0,
         num: limit,
-        order: 'listen',
-        platform: 'mac',
-        newsong: 1
+        order: "listen",
+        platform: "mac",
+        newsong: 1,
       },
-      format: 'data.list'
+      format: "data.list",
     };
   }
 
@@ -102,15 +103,15 @@ export default class TencentProvider extends BaseProvider {
    */
   playlist(id) {
     return {
-      method: 'GET',
-      url: 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_playlist_cp.fcg',
+      method: "GET",
+      url: "https://c.y.qq.com/v8/fcg-bin/fcg_v8_playlist_cp.fcg",
       body: {
         id: id,
-        format: 'json',
+        format: "json",
         newsong: 1,
-        platform: 'jqspaframe.json'
+        platform: "jqspaframe.json",
       },
-      format: 'data.cdlist.0.songlist'
+      format: "data.cdlist.0.songlist",
     };
   }
 
@@ -119,14 +120,14 @@ export default class TencentProvider extends BaseProvider {
    */
   url(id, br = 320) {
     return {
-      method: 'GET',
-      url: 'https://c.y.qq.com/v8/fcg-bin/fcg_play_single_song.fcg',
+      method: "GET",
+      url: "https://c.y.qq.com/v8/fcg-bin/fcg_play_single_song.fcg",
       body: {
         songmid: id,
-        platform: 'yqq',
-        format: 'json'
+        platform: "yqq",
+        format: "json",
       },
-      decode: 'tencent_url'
+      decode: "tencent_url",
     };
   }
 
@@ -135,13 +136,13 @@ export default class TencentProvider extends BaseProvider {
    */
   lyric(id) {
     return {
-      method: 'GET',
-      url: 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg',
+      method: "GET",
+      url: "https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg",
       body: {
         songmid: id,
-        g_tk: '5381'
+        g_tk: "5381",
       },
-      decode: 'tencent_lyric'
+      decode: "tencent_lyric",
     };
   }
 
@@ -160,7 +161,7 @@ export default class TencentProvider extends BaseProvider {
     if (data.musicData) {
       data = data.musicData;
     }
-    
+
     const result = {
       id: data.mid,
       name: data.name,
@@ -169,13 +170,13 @@ export default class TencentProvider extends BaseProvider {
       pic_id: data.album.mid,
       url_id: data.mid,
       lyric_id: data.mid,
-      source: 'tencent'
+      source: "tencent",
     };
-    
-    data.singer.forEach(singer => {
+
+    data.singer.forEach((singer) => {
       result.artist.push(singer.name);
     });
-    
+
     return result;
   }
 
@@ -183,9 +184,9 @@ export default class TencentProvider extends BaseProvider {
    * 处理腾讯音乐的解码逻辑
    */
   async handleDecode(decodeType, data) {
-    if (decodeType === 'tencent_url') {
+    if (decodeType === "tencent_url") {
       return this.urlDecode(data);
-    } else if (decodeType === 'tencent_lyric') {
+    } else if (decodeType === "tencent_lyric") {
       return this.lyricDecode(data);
     }
     return data;
@@ -197,27 +198,27 @@ export default class TencentProvider extends BaseProvider {
   async urlDecode(result) {
     const data = JSON.parse(result);
     const guid = Math.floor(Math.random() * 10000000000);
-    
+
     const qualityMap = [
-      ['size_flac', 999, 'F000', 'flac'],
-      ['size_320mp3', 320, 'M800', 'mp3'],
-      ['size_192aac', 192, 'C600', 'm4a'],
-      ['size_128mp3', 128, 'M500', 'mp3'],
-      ['size_96aac', 96, 'C400', 'm4a'],
-      ['size_48aac', 48, 'C200', 'm4a'],
-      ['size_24aac', 24, 'C100', 'm4a']
+      ["size_flac", 999, "F000", "flac"],
+      ["size_320mp3", 320, "M800", "mp3"],
+      ["size_192aac", 192, "C600", "m4a"],
+      ["size_128mp3", 128, "M500", "mp3"],
+      ["size_96aac", 96, "C400", "m4a"],
+      ["size_48aac", 48, "C200", "m4a"],
+      ["size_24aac", 24, "C100", "m4a"],
     ];
-    
-    let uin = '0';
+
+    let uin = "0";
     const uinMatch = this.meting.header.Cookie && this.meting.header.Cookie.match(/uin=(\d+)/);
     if (uinMatch) {
       uin = uinMatch[1];
     }
-    
+
     const payload = {
       req_0: {
-        module: 'vkey.GetVkeyServer',
-        method: 'CgiGetVkey',
+        module: "vkey.GetVkeyServer",
+        method: "CgiGetVkey",
         param: {
           guid: String(guid),
           songmid: [],
@@ -225,31 +226,31 @@ export default class TencentProvider extends BaseProvider {
           songtype: [],
           uin: uin,
           loginflag: 1,
-          platform: '20'
-        }
-      }
+          platform: "20",
+        },
+      },
     };
-    
+
     qualityMap.forEach(([sizeKey, br, prefix, ext]) => {
       payload.req_0.param.songmid.push(data.data[0].mid);
       payload.req_0.param.filename.push(`${prefix}${data.data[0].file.media_mid}.${ext}`);
       payload.req_0.param.songtype.push(data.data[0].type);
     });
-    
+
     const api = {
-      method: 'GET',
-      url: 'https://u.y.qq.com/cgi-bin/musicu.fcg',
+      method: "GET",
+      url: "https://u.y.qq.com/cgi-bin/musicu.fcg",
       body: {
-        format: 'json',
-        platform: 'yqq.json',
+        format: "json",
+        platform: "yqq.json",
         needNewCode: 0,
-        data: JSON.stringify(payload)
-      }
+        data: JSON.stringify(payload),
+      },
     };
-    
+
     const response = JSON.parse(await this.meting._exec(api));
     const vkeys = response.req_0.data.midurlinfo;
-    
+
     let url;
     for (let i = 0; i < qualityMap.length; i++) {
       const [sizeKey, br, prefix, ext] = qualityMap[i];
@@ -258,21 +259,21 @@ export default class TencentProvider extends BaseProvider {
           url = {
             url: response.req_0.data.sip[0] + vkeys[i].purl,
             size: data.data[0].file[sizeKey],
-            br: br
+            br: br,
           };
           break;
         }
       }
     }
-    
+
     if (!url) {
       url = {
-        url: '',
+        url: "",
         size: 0,
-        br: -1
+        br: -1,
       };
     }
-    
+
     return JSON.stringify(url);
   }
 
@@ -284,18 +285,18 @@ export default class TencentProvider extends BaseProvider {
 
     // 常见HTML实体编码映射
     const entityMap = {
-      '&apos;': "'",
-      '&quot;': '"',
-      '&amp;': '&',
-      '&lt;': '<',
-      '&gt;': '>',
-      '&nbsp;': ' '
+      "&apos;": "'",
+      "&quot;": '"',
+      "&amp;": "&",
+      "&lt;": "<",
+      "&gt;": ">",
+      "&nbsp;": " ",
     };
 
     // 替换命名实体
     let decoded = text;
     for (const [entity, char] of Object.entries(entityMap)) {
-      decoded = decoded.replace(new RegExp(entity, 'g'), char);
+      decoded = decoded.replace(new RegExp(entity, "g"), char);
     }
 
     // 替换数字实体（如 &#39; &#34; 等）
@@ -319,8 +320,12 @@ export default class TencentProvider extends BaseProvider {
     const data = JSON.parse(jsonStr);
 
     const lyricData = {
-      lyric: data.lyric ? this.decodeHtmlEntities(Buffer.from(data.lyric, 'base64').toString()) : '',
-      tlyric: data.trans ? this.decodeHtmlEntities(Buffer.from(data.trans, 'base64').toString()) : ''
+      lyric: data.lyric
+        ? this.decodeHtmlEntities(Buffer.from(data.lyric, "base64").toString())
+        : "",
+      tlyric: data.trans
+        ? this.decodeHtmlEntities(Buffer.from(data.trans, "base64").toString())
+        : "",
     };
 
     return JSON.stringify(lyricData);

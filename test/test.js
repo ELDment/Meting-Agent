@@ -56,13 +56,13 @@ async function runTests() {
       console.log(`Platform ${platform} failed:`, error.message);
     }
 
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
   }
 
   console.log("\n=== Smoke test finished ===");
 }
 
-runTests().catch(error => {
+runTests().catch((error) => {
   console.error("Unexpected test failure:", error);
   process.exitCode = 1;
 });

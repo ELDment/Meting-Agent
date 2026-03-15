@@ -12,7 +12,7 @@ function GetHelpText() {
     "Usage:",
     "  meting-mcp            Start the MCP stdio server",
     "  meting-mcp --help     Show help",
-    "  meting-mcp --version  Show version"
+    "  meting-mcp --version  Show version",
   ].join("\n");
 }
 
@@ -47,7 +47,9 @@ async function Main() {
   await StartServer();
 }
 
-Main().catch(error => {
-  process.stderr.write(`meting-mcp failed to start: ${error instanceof Error ? error.stack ?? error.message : String(error)}\n`);
+Main().catch((error) => {
+  process.stderr.write(
+    `meting-mcp failed to start: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}\n`
+  );
   process.exit(1);
 });

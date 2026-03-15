@@ -7,12 +7,12 @@
  * Released under the MIT license
  */
 
-import { URLSearchParams } from 'url';
-import ProviderFactory from './providers/index.js';
+import { URLSearchParams } from "url";
+import ProviderFactory from "./providers/index.js";
 
 class Meting {
-  constructor(server = 'netease') {
-    this.VERSION = '__VERSION__'; // 在构建时由 rollup 替换为实际版本号
+  constructor(server = "netease") {
+    this.VERSION = "__VERSION__"; // 在构建时由 rollup 替换为实际版本号
     this.raw = null;
     this.info = null;
     this.error = null;
@@ -30,7 +30,7 @@ class Meting {
   // 设置音乐平台
   site(server) {
     if (!ProviderFactory.isSupported(server)) {
-      server = 'netease'; // 默认使用网易云音乐
+      server = "netease"; // 默认使用网易云音乐
     }
 
     this.server = server;
@@ -42,7 +42,7 @@ class Meting {
 
   // 设置 Cookie
   cookie(cookie) {
-    this.header['Cookie'] = cookie;
+    this.header["Cookie"] = cookie;
     return this;
   }
 
@@ -61,15 +61,15 @@ class Meting {
   // HTTP 请求方法 - 使用 fetch API
   async _curl(url, payload = null, headerOnly = false) {
     const requestOptions = {
-      method: payload ? 'POST' : 'GET',
-      headers: { ...this.header }
+      method: payload ? "POST" : "GET",
+      headers: { ...this.header },
     };
 
     // 处理请求体
     if (payload) {
-      if (typeof payload === 'object' && !Buffer.isBuffer(payload) && typeof payload !== 'string') {
+      if (typeof payload === "object" && !Buffer.isBuffer(payload) && typeof payload !== "string") {
         payload = new URLSearchParams(payload).toString();
-        requestOptions.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        requestOptions.headers["Content-Type"] = "application/x-www-form-urlencoded";
       }
       requestOptions.body = payload;
     }
@@ -83,38 +83,38 @@ class Meting {
     const makeRequest = async () => {
       try {
         const response = await fetch(url, requestOptions);
-        
+
         clearTimeout(timeoutId);
-        
+
         // 存储响应信息
         this.info = {
           statusCode: response.status,
-          headers: Object.fromEntries(response.headers.entries())
+          headers: Object.fromEntries(response.headers.entries()),
         };
 
         // 获取响应数据
         const data = await response.text();
         this.raw = data;
         this.error = null;
-        this.status = '';
-        
+        this.status = "";
+
         return this;
       } catch (err) {
         clearTimeout(timeoutId);
-        
+
         // 处理错误
-        if (err.name === 'AbortError') {
-          this.error = 'TIMEOUT';
-          this.status = 'Request timeout';
+        if (err.name === "AbortError") {
+          this.error = "TIMEOUT";
+          this.status = "Request timeout";
         } else {
           this.error = err.code || err.name;
           this.status = err.message;
         }
-        
+
         // 重试机制
         if (retries > 0) {
           retries--;
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
           return makeRequest();
         } else {
           return this;
@@ -124,7 +124,6 @@ class Meting {
 
     return await makeRequest();
   }
-
 
   // ========== 公共 API 方法 ==========
 

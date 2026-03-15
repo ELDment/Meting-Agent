@@ -5,7 +5,7 @@
 export default class BaseProvider {
   constructor(meting) {
     this.meting = meting;
-    this.name = 'base';
+    this.name = "base";
   }
 
   /**
@@ -134,9 +134,9 @@ export default class BaseProvider {
     }
 
     // 处理 GET 请求的参数
-    if (api.method === 'GET' && api.body) {
+    if (api.method === "GET" && api.body) {
       const params = new URLSearchParams(api.body);
-      api.url += '?' + params.toString();
+      api.url += "?" + params.toString();
       api.body = null;
     }
 
@@ -156,7 +156,7 @@ export default class BaseProvider {
     }
 
     // 如果有格式化规则，进行数据清理
-    if ('format' in api) {
+    if ("format" in api) {
       data = this.cleanData(data, api.format, meting);
     }
 
@@ -181,9 +181,9 @@ export default class BaseProvider {
    */
   async handleDecode(decodeType, data) {
     // 根据解码类型调用相应的方法
-    if (decodeType.includes('url')) {
+    if (decodeType.includes("url")) {
       return this.urlDecode(data);
-    } else if (decodeType.includes('lyric')) {
+    } else if (decodeType.includes("lyric")) {
       return this.lyricDecode(data);
     }
     return data;
@@ -208,7 +208,7 @@ export default class BaseProvider {
       data = this.pickupData(data, rule);
     }
 
-    if (!Array.isArray(data) && typeof data === 'object' && data !== null) {
+    if (!Array.isArray(data) && typeof data === "object" && data !== null) {
       data = [data];
     }
 
@@ -217,8 +217,8 @@ export default class BaseProvider {
     }
 
     // 使用当前 provider 的格式化方法
-    if (typeof this.format === 'function') {
-      const result = data.map(item => this.format(item));
+    if (typeof this.format === "function") {
+      const result = data.map((item) => this.format(item));
       return JSON.stringify(result);
     }
 
@@ -232,16 +232,16 @@ export default class BaseProvider {
    * @returns {Object} 提取后的数据
    */
   pickupData(array, rule) {
-    const parts = rule.split('.');
+    const parts = rule.split(".");
     let result = array;
-    
+
     for (const part of parts) {
-      if (!result || typeof result !== 'object' || !(part in result)) {
+      if (!result || typeof result !== "object" || !(part in result)) {
         return {};
       }
       result = result[part];
     }
-    
+
     return result;
   }
 }

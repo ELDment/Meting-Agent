@@ -1,5 +1,5 @@
-import crypto from 'crypto';
-import BaseProvider from './base.js';
+import crypto from "crypto";
+import BaseProvider from "./base.js";
 
 /**
  * 百度音乐平台提供者
@@ -7,7 +7,7 @@ import BaseProvider from './base.js';
 export default class BaiduProvider extends BaseProvider {
   constructor(meting) {
     super(meting);
-    this.name = 'baidu';
+    this.name = "baidu";
   }
 
   /**
@@ -15,11 +15,12 @@ export default class BaiduProvider extends BaseProvider {
    */
   getHeaders() {
     return {
-      'Cookie': `BAIDUID=${this._getRandomHex(32)}:FG=1`,
-      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) baidu-music/1.2.1 Chrome/66.0.3359.181 Electron/3.0.5 Safari/537.36',
-      'Accept': '*/*',
-      'Content-Type': 'application/json;charset=UTF-8',
-      'Accept-Language': 'zh-CN'
+      Cookie: `BAIDUID=${this._getRandomHex(32)}:FG=1`,
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) baidu-music/1.2.1 Chrome/66.0.3359.181 Electron/3.0.5 Safari/537.36",
+      Accept: "*/*",
+      "Content-Type": "application/json;charset=UTF-8",
+      "Accept-Language": "zh-CN",
     };
   }
 
@@ -28,19 +29,19 @@ export default class BaiduProvider extends BaseProvider {
    */
   search(keyword, option = {}) {
     return {
-      method: 'GET',
-      url: 'http://musicapi.taihe.com/v1/restserver/ting',
+      method: "GET",
+      url: "http://musicapi.taihe.com/v1/restserver/ting",
       body: {
-        from: 'qianqianmini',
-        method: 'baidu.ting.search.merge',
+        from: "qianqianmini",
+        method: "baidu.ting.search.merge",
         isNew: 1,
-        platform: 'darwin',
+        platform: "darwin",
         page_no: option.page || 1,
         query: keyword,
-        version: '11.2.1',
-        page_size: option.limit || 30
+        version: "11.2.1",
+        page_size: option.limit || 30,
       },
-      format: 'result.song_info.song_list'
+      format: "result.song_info.song_list",
     };
   }
 
@@ -49,18 +50,18 @@ export default class BaiduProvider extends BaseProvider {
    */
   song(id) {
     return {
-      method: 'GET',
-      url: 'http://musicapi.taihe.com/v1/restserver/ting',
+      method: "GET",
+      url: "http://musicapi.taihe.com/v1/restserver/ting",
       body: {
-        from: 'qianqianmini',
-        method: 'baidu.ting.song.getInfos',
+        from: "qianqianmini",
+        method: "baidu.ting.song.getInfos",
         songid: id,
         res: 1,
-        platform: 'darwin',
-        version: '1.0.0'
+        platform: "darwin",
+        version: "1.0.0",
       },
-      encode: 'baidu_AESCBC',
-      format: 'songinfo'
+      encode: "baidu_AESCBC",
+      format: "songinfo",
     };
   }
 
@@ -69,16 +70,16 @@ export default class BaiduProvider extends BaseProvider {
    */
   album(id) {
     return {
-      method: 'GET',
-      url: 'http://musicapi.taihe.com/v1/restserver/ting',
+      method: "GET",
+      url: "http://musicapi.taihe.com/v1/restserver/ting",
       body: {
-        from: 'qianqianmini',
-        method: 'baidu.ting.album.getAlbumInfo',
+        from: "qianqianmini",
+        method: "baidu.ting.album.getAlbumInfo",
         album_id: id,
-        platform: 'darwin',
-        version: '11.2.1'
+        platform: "darwin",
+        version: "11.2.1",
       },
-      format: 'songlist'
+      format: "songlist",
     };
   }
 
@@ -87,19 +88,19 @@ export default class BaiduProvider extends BaseProvider {
    */
   artist(id, limit = 50) {
     return {
-      method: 'GET',
-      url: 'http://musicapi.taihe.com/v1/restserver/ting',
+      method: "GET",
+      url: "http://musicapi.taihe.com/v1/restserver/ting",
       body: {
-        from: 'qianqianmini',
-        method: 'baidu.ting.artist.getSongList',
+        from: "qianqianmini",
+        method: "baidu.ting.artist.getSongList",
         artistid: id,
         limits: limit,
-        platform: 'darwin',
+        platform: "darwin",
         offset: 0,
         tinguid: 0,
-        version: '11.2.1'
+        version: "11.2.1",
       },
-      format: 'songlist'
+      format: "songlist",
     };
   }
 
@@ -108,16 +109,16 @@ export default class BaiduProvider extends BaseProvider {
    */
   playlist(id) {
     return {
-      method: 'GET',
-      url: 'http://musicapi.taihe.com/v1/restserver/ting',
+      method: "GET",
+      url: "http://musicapi.taihe.com/v1/restserver/ting",
       body: {
-        from: 'qianqianmini',
-        method: 'baidu.ting.diy.gedanInfo',
+        from: "qianqianmini",
+        method: "baidu.ting.diy.gedanInfo",
         listid: id,
-        platform: 'darwin',
-        version: '11.2.1'
+        platform: "darwin",
+        version: "11.2.1",
       },
-      format: 'content'
+      format: "content",
     };
   }
 
@@ -126,18 +127,18 @@ export default class BaiduProvider extends BaseProvider {
    */
   url(id, br = 320) {
     return {
-      method: 'GET',
-      url: 'http://musicapi.taihe.com/v1/restserver/ting',
+      method: "GET",
+      url: "http://musicapi.taihe.com/v1/restserver/ting",
       body: {
-        from: 'qianqianmini',
-        method: 'baidu.ting.song.getInfos',
+        from: "qianqianmini",
+        method: "baidu.ting.song.getInfos",
         songid: id,
         res: 1,
-        platform: 'darwin',
-        version: '1.0.0'
+        platform: "darwin",
+        version: "1.0.0",
       },
-      encode: 'baidu_AESCBC',
-      decode: 'baidu_url'
+      encode: "baidu_AESCBC",
+      decode: "baidu_url",
     };
   }
 
@@ -146,16 +147,16 @@ export default class BaiduProvider extends BaseProvider {
    */
   lyric(id) {
     return {
-      method: 'GET',
-      url: 'http://musicapi.taihe.com/v1/restserver/ting',
+      method: "GET",
+      url: "http://musicapi.taihe.com/v1/restserver/ting",
       body: {
-        from: 'qianqianmini',
-        method: 'baidu.ting.song.lry',
+        from: "qianqianmini",
+        method: "baidu.ting.song.lry",
         songid: id,
-        platform: 'darwin',
-        version: '1.0.0'
+        platform: "darwin",
+        version: "1.0.0",
       },
-      decode: 'baidu_lyric'
+      decode: "baidu_lyric",
     };
   }
 
@@ -178,12 +179,12 @@ export default class BaiduProvider extends BaseProvider {
     return {
       id: data.song_id,
       name: data.title,
-      artist: data.author ? data.author.split(',') : [],
-      album: data.album_title || '',
+      artist: data.author ? data.author.split(",") : [],
+      album: data.album_title || "",
       pic_id: data.song_id,
       url_id: data.song_id,
       lyric_id: data.song_id,
-      source: 'baidu'
+      source: "baidu",
     };
   }
 
@@ -191,16 +192,16 @@ export default class BaiduProvider extends BaseProvider {
    * 处理百度音乐的编码/解码逻辑
    */
   async handleEncode(api) {
-    if (api.encode === 'baidu_AESCBC') {
+    if (api.encode === "baidu_AESCBC") {
       return this.aesEncrypt(api);
     }
     return api;
   }
 
   async handleDecode(decodeType, data) {
-    if (decodeType === 'baidu_url') {
+    if (decodeType === "baidu_url") {
       return this.urlDecode(data);
-    } else if (decodeType === 'baidu_lyric') {
+    } else if (decodeType === "baidu_lyric") {
       return this.lyricDecode(data);
     }
     return data;
@@ -210,18 +211,18 @@ export default class BaiduProvider extends BaseProvider {
    * 百度音乐 AES 加密
    */
   async aesEncrypt(api) {
-    const key = 'DBEECF8C50FD160E';
-    const vi = '1231021386755796';
-    
+    const key = "DBEECF8C50FD160E";
+    const vi = "1231021386755796";
+
     const data = `songid=${api.body.songid}&ts=${Date.now()}`;
-    
-    const cipher = crypto.createCipheriv('aes-128-cbc', key, vi);
+
+    const cipher = crypto.createCipheriv("aes-128-cbc", key, vi);
     cipher.setAutoPadding(true);
-    let encrypted = cipher.update(data, 'utf8', 'base64');
-    encrypted += cipher.final('base64');
-    
+    let encrypted = cipher.update(data, "utf8", "base64");
+    encrypted += cipher.final("base64");
+
     api.body.e = encrypted;
-    
+
     return api;
   }
 
@@ -230,27 +231,27 @@ export default class BaiduProvider extends BaseProvider {
    */
   urlDecode(result) {
     const data = JSON.parse(result);
-    
+
     let maxBr = 0;
     let url;
-    
-    data.songurl.url.forEach(item => {
+
+    data.songurl.url.forEach((item) => {
       if (item.file_bitrate <= this.meting.temp.br && item.file_bitrate > maxBr) {
         maxBr = item.file_bitrate;
         url = {
           url: item.file_link,
-          br: item.file_bitrate
+          br: item.file_bitrate,
         };
       }
     });
-    
+
     if (!url) {
       url = {
-        url: '',
-        br: -1
+        url: "",
+        br: -1,
       };
     }
-    
+
     return JSON.stringify(url);
   }
 
@@ -260,10 +261,10 @@ export default class BaiduProvider extends BaseProvider {
   lyricDecode(result) {
     const data = JSON.parse(result);
     const lyricData = {
-      lyric: data.lrcContent || '',
-      tlyric: ''
+      lyric: data.lrcContent || "",
+      tlyric: "",
     };
-    
+
     return JSON.stringify(lyricData);
   }
 
@@ -273,8 +274,9 @@ export default class BaiduProvider extends BaseProvider {
    * 生成随机十六进制字符串
    */
   _getRandomHex(length) {
-    return crypto.randomBytes(Math.ceil(length / 2))
-      .toString('hex')
+    return crypto
+      .randomBytes(Math.ceil(length / 2))
+      .toString("hex")
       .slice(0, length);
   }
 }

@@ -1,8 +1,8 @@
-import NeteaseProvider from './netease.js';
-import TencentProvider from './tencent.js';
-import KugouProvider from './kugou.js';
-import BaiduProvider from './baidu.js';
-import KuwoProvider from './kuwo.js';
+import NeteaseProvider from "./netease.js";
+import TencentProvider from "./tencent.js";
+import KugouProvider from "./kugou.js";
+import BaiduProvider from "./baidu.js";
+import KuwoProvider from "./kuwo.js";
 
 /**
  * 音乐平台提供者工厂
@@ -13,7 +13,7 @@ export default class ProviderFactory {
     tencent: TencentProvider,
     kugou: KugouProvider,
     baidu: BaiduProvider,
-    kuwo: KuwoProvider
+    kuwo: KuwoProvider,
   };
 
   /**

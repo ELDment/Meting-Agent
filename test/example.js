@@ -49,6 +49,6 @@ async function main() {
   }
 }
 
-main().catch(error => {
+main().catch((error) => {
   console.error("Unexpected example error:", error);
 });
