@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - main
+      - dev
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   publish-npm:
@@ -20,10 +28,35 @@ jobs:
         with:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
-      - run: node scripts/sync-mcp-core.mjs
       - run: npm ci
       - run: npm run verify
-      - run: npm publish --provenance --access public
+      - name: Prepare npm release channel
+        id: npm-release
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
+            node -e "const fs=require('node:fs'); const packagePath='package.json'; const packageJson=JSON.parse(fs.readFileSync(packagePath, 'utf8')); const stableVersion=packageJson.version.split('-')[0]; packageJson.version=`${stableVersion}-dev.${process.env.GITHUB_RUN_NUMBER}`; fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + '\n');"
+            echo "tag=prerelease" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+          package_name=$(node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8')).name")
+          version=$(node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8')).version")
+          echo "package_name=$package_name" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Check npm version availability
+        id: npm-version-check
+        shell: bash
+        run: |
+          if npm view "${{ steps.npm-release.outputs.package_name }}@${{ steps.npm-release.outputs.version }}" version --registry https://registry.npmjs.org > /dev/null 2>&1; then
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "Version ${{ steps.npm-release.outputs.version }} already exists on npm, skipping publish."
+          else
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publish npm package
+        if: steps.npm-version-check.outputs.should_publish == 'true'
+        run: npm publish --provenance --access public --tag "${{ steps.npm-release.outputs.tag }}"
 
   release-skill:
     runs-on: ubuntu-latest
@@ -34,23 +67,53 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Prepare skill release channel
+        id: skill-release
+        shell: bash
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
+            echo "release_tag=dev" >> "$GITHUB_OUTPUT"
+            echo "release_title=dev" >> "$GITHUB_OUTPUT"
+            echo "asset_name=meting-agent-skill-dev.zip" >> "$GITHUB_OUTPUT"
+            echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "release_tag=main" >> "$GITHUB_OUTPUT"
+            echo "release_title=main" >> "$GITHUB_OUTPUT"
+            echo "asset_name=meting-agent-skill-main.zip" >> "$GITHUB_OUTPUT"
+            echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Build skill release bundle
         run: node scripts/build-skill-release.mjs
       - name: Smoke test built skill bundle
         run: |
           node dist/meting-agent-skill/scripts/meting-cli.mjs platforms
-          node dist/meting-agent-skill/scripts/meting-cli.mjs search --platform netease --keyword "我怀念的" --limit 1
+          node dist/meting-agent-skill/scripts/meting-cli.mjs search --platform netease --keyword "Hello Adele" --limit 1
       - name: Create zip archive
+        shell: bash
         run: |
           cd dist
-          zip -r "meting-agent-skill-${GITHUB_REF_NAME}.zip" meting-agent-skill
+          zip -r "${{ steps.skill-release.outputs.asset_name }}" meting-agent-skill
       - name: Publish GitHub release asset
         env:
           GH_TOKEN: ${{ github.token }}
+        shell: bash
         run: |
-          asset="dist/meting-agent-skill-${GITHUB_REF_NAME}.zip"
-          if gh release view "${GITHUB_REF_NAME}" > /dev/null 2>&1; then
-            gh release upload "${GITHUB_REF_NAME}" "$asset" --clobber
+          asset="dist/${{ steps.skill-release.outputs.asset_name }}"
+          release_tag="${{ steps.skill-release.outputs.release_tag }}"
+          release_title="${{ steps.skill-release.outputs.release_title }}"
+          is_prerelease="${{ steps.skill-release.outputs.is_prerelease }}"
+
+          if gh release view "$release_tag" > /dev/null 2>&1; then
+            if [[ "$is_prerelease" == "true" ]]; then
+              gh release edit "$release_tag" --title "$release_title" --prerelease
+            else
+              gh release edit "$release_tag" --title "$release_title" --latest
+            fi
+            gh release upload "$release_tag" "$asset" --clobber
           else
-            gh release create "${GITHUB_REF_NAME}" "$asset" --title "${GITHUB_REF_NAME}" --generate-notes
+            if [[ "$is_prerelease" == "true" ]]; then
+              gh release create "$release_tag" "$asset" --title "$release_title" --prerelease --generate-notes
+            else
+              gh release create "$release_tag" "$asset" --title "$release_title" --generate-notes
+            fi
           fi

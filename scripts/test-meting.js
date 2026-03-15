@@ -53,7 +53,7 @@ async function RunPlatformTest(platform, testKeyword) {
   }
 }
 
-async function runTests() {
+async function RunTests() {
   console.log("=== Meting smoke test ===\n");
 
   const platform = process.argv[2];
@@ -72,7 +72,7 @@ async function runTests() {
   console.log("\n=== Smoke test finished ===");
 }
 
-runTests().catch((error) => {
+RunTests().catch((error) => {
   console.error("Unexpected test failure:", error);
   process.exitCode = 1;
 });
