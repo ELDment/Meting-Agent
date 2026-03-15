@@ -200,7 +200,7 @@ export default class KugouProvider extends BaseProvider {
     const data = await this.meting.format(false).song(id);
     this.meting.isFormat = format;
     const songData = JSON.parse(data);
-    let url = songData.imgUrl;
+    let url = songData.album_img;
     url = url.replace("{size}", "400");
     return JSON.stringify({ url: url });
   }
