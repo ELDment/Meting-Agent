@@ -23,10 +23,16 @@ Claude 示例配置：
   "mcpServers": {
     "meting": {
       "command": "npx",
-      "args": ["-y", "@eldment/meting-mcp@latest"],
+      "args": [
+        "-y",
+        "@eldment/meting-mcp@latest"
+      ],
       "env": {
-        "METING_NETEASE_COOKIE": "...",
-        "METING_TENCENT_COOKIE": "..."
+        "METING_NETEASE_COOKIE": "__csrf=...; MUSIC_U=...; NMTID=...; __remember_me=true;",
+        "METING_TENCENT_COOKIE": "uin=...; qm_keyst=...; qqmusic_key=...;",
+        "METING_KUGOU_COOKIE": "KugooID=...; t=...; dfid=...; mid=...;",
+        "METING_BAIDU_COOKIE": "...",
+        "METING_KUWO_COOKIE": "..."
       },
       "timeout": 60000
     }
@@ -45,8 +51,11 @@ args = [
     "@eldment/meting-mcp@latest",
 ]
 env = {
-    METING_NETEASE_COOKIE = "...",
-    METING_TENCENT_COOKIE = "...",
+    METING_NETEASE_COOKIE = "__csrf=...; MUSIC_U=...; NMTID=...; __remember_me=true;",
+    METING_TENCENT_COOKIE = "uin=...; qm_keyst=...; qqmusic_key=...;",
+    METING_KUGOU_COOKIE = "KugooID=...; t=...; dfid=...; mid=...;",
+    METING_BAIDU_COOKIE = "...",
+    METING_KUWO_COOKIE = "...",
 }
 tool_timeout_sec = 60
 disabled = false
@@ -67,7 +76,7 @@ MCP 运行时会优先从环境变量读取 cookie，再回退到工具输入参
 - `METING_KUGOU_COOKIE`
 - `METING_BAIDU_COOKIE`
 - `METING_KUWO_COOKIE`
-- `METING_COOKIE`（兜底变量）
+- `METING_COOKIE`（通用）
 
 如果只需要给某一个平台带 cookie，优先使用对应的平台变量；如果想统一兜底，可以只设置 `METING_COOKIE`
 

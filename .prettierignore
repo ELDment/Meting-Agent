@@ -5,3 +5,5 @@ lib/
 .inspect/
 .probe/
 npm-debug.log*
+README.md
+ACKNOWLEDGEMENTS.md
