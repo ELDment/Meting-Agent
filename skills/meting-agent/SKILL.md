@@ -9,7 +9,6 @@ description: Use when Codex needs direct music lookup capabilities through bundl
 
 - In the release bundle, treat `./scripts/meting` as the implementation root.
 - Use `./scripts/meting-cli.mjs` for normal lookup tasks.
-- Do not use `../../mcp` as a runtime dependency for this skill.
 - Downloaded bundles are self-contained and should not rely on repository-relative paths.
 
 ## Core Workflow
@@ -36,8 +35,3 @@ description: Use when Codex needs direct music lookup capabilities through bundl
 - Prefer `METING_<PLATFORM>_COOKIE` for per-platform cookies.
 - Use `METING_COOKIE` as a shared fallback.
 - Use `--cookie <value>` only when the call needs an explicit override.
-
-## Sync Rules
-
-- Runtime release bundles stay independent, but repository maintenance uses one shared source.
-- In the source repository, update `shared/meting/` first, then run `node scripts/build-skill-release.mjs` from the repository root.

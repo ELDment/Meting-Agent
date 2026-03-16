@@ -2,6 +2,10 @@
 
 `Meting-Agent` 是基于 **[metowolf/Meting](https://github.com/metowolf/Meting)** 构建的 MCP Server，支持 [网易云音乐](https://music.163.com/)（`netease`）、[腾讯音乐](https://y.qq.com/)（`tencent`）、[酷狗音乐](https://www.kugou.com/)（`kugou`）、[千千音乐](https://music.taihe.com/)（`baidu`）、[酷我音乐](https://www.kuwo.cn/)（`kuwo`） 等音乐平台，提供搜索、歌曲、专辑、歌手、歌单、播放链接、歌词、封面等能力
 
+## 下载
+
+通过 npm 发布，下载入口是 [@eldment/meting-agent](https://www.npmjs.com/package/@eldment/meting-agent)
+
 ## MCP 工具
 
 - `platforms`：列出支持的平台和平台代号
@@ -14,7 +18,7 @@
 - `lyric`：按歌曲 ID 获取歌词
 - `pic`：按资源 ID 获取封面地址
 
-## 发布包名
+## MCP 接入
 
 Claude 配置示例：
 
