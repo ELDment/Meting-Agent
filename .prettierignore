@@ -1,12 +1,10 @@
 dist/
 node_modules/
 *.md
+.github/workflows/release.yml
 
 mcp/.inspect/
 mcp/.probe/
 mcp/node_modules/
-mcp/src/meting.js
-mcp/src/providers/
-skills/meting-agent/node_modules/
-skills/meting-agent/scripts/meting.js
-skills/meting-agent/scripts/providers/
+mcp/src/meting/meting.js
+mcp/src/meting/providers/

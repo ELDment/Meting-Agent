@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const generatedBanner = [
   "/**",
-  " * Generated from shared/core-src by scripts/build-skill-release.mjs.",
+  " * Generated from shared/meting by scripts/build-skill-release.mjs.",
   " * Do not edit this copy directly.",
   " */",
   "",
@@ -22,10 +22,10 @@ const staticFiles = Object.freeze([
 const scriptPath = fileURLToPath(import.meta.url);
 const scriptDirectory = dirname(scriptPath);
 const repositoryRoot = resolve(scriptDirectory, "..");
-const sharedRoot = resolve(repositoryRoot, "shared", "core-src");
+const sharedRoot = resolve(repositoryRoot, "shared", "meting");
 const skillSourceRoot = resolve(repositoryRoot, "skills", "meting-agent");
 const outputRoot = resolve(repositoryRoot, "dist", "meting-agent-skill");
-const outputCoreRoot = resolve(outputRoot, "scripts", "core");
+const outputMetingRoot = resolve(outputRoot, "scripts", "meting");
 
 async function PathExists(path) {
   try {
@@ -71,7 +71,7 @@ async function CopyStaticFile(relativePath) {
 
 async function CopyGeneratedCoreFile(relativePath) {
   const sourcePath = resolve(sharedRoot, relativePath);
-  const targetPath = resolve(outputCoreRoot, relativePath);
+  const targetPath = resolve(outputMetingRoot, relativePath);
   const sourceContent = NormalizeContent(await readFile(sourcePath, "utf8"));
   const nextContent = `${generatedBanner}${sourceContent}`;
 
@@ -84,7 +84,7 @@ async function CopyGeneratedCoreFile(relativePath) {
 
 async function Main() {
   if (!(await PathExists(sharedRoot))) {
-    throw new Error("shared/core-src not found.");
+    throw new Error("shared/meting not found.");
   }
 
   if (!(await PathExists(skillSourceRoot))) {

@@ -1,50 +1,33 @@
 # Meting-Agent
 
-`Meting-Agent` 维护两套运行时独立的交付物：
+`Meting-Agent` 是基于 **[metowolf/Meting](https://github.com/metowolf/Meting)** 构建的多平台音乐能力封装，当前提供两类交付物：
 
-- `mcp/`：可发布的 Node.js MCP Server，对外名称统一为 `Meting Agent`。
-- `skills/meting-agent/`：面向 Codex 的 skill 源文件，最终以 GitHub Release 资产分发。
+- **MCP**：[@eldment/meting-agent](https://www.npmjs.com/package/@eldment/meting-agent)
+- **Skill**：[skills/meting-agent](https://github.com/ELDment/Meting-Agent/releases)
 
-## 目录说明
+## 能力
 
-- `shared/core-src/`：唯一的核心源码来源，包含 `meting.js` 和全部 providers。
-- `mcp/`：MCP Server 运行时副本与发布配置。
-- `skills/meting-agent/`：skill 元数据与静态脚本源文件。
-- `scripts/sync-mcp-core.mjs`：把共享核心生成到 `mcp/src/`。
-- `scripts/build-skill-release.mjs`：构建可下载的 skill release bundle。
+- `search`：按关键字搜索歌曲、专辑、歌手或平台特定资源
+- `song`：按歌曲 ID 获取歌曲详情
+- `album`：按专辑 ID 获取专辑详情
+- `artist`：按歌手 ID 获取歌手作品列表
+- `playlist`：按歌单 ID 获取歌单详情
+- `url`：按歌曲 ID 获取可播放链接
+- `lyric`：按歌曲 ID 获取歌词内容
+- `pic`：按资源 ID 获取封面或图片链接
 
-## 常用命令
+支持平台：[网易云音乐](https://music.163.com/)（`netease`）、[腾讯音乐](https://y.qq.com/)（`tencent`）、[酷狗音乐](https://www.kugou.com/)（`kugou`）、[千千音乐](https://music.taihe.com/)（`baidu`）、[酷我音乐](https://www.kuwo.cn/)（`kuwo`）
 
-同步共享核心到 MCP：
+## 文档
 
-```powershell
-node scripts/sync-mcp-core.mjs
-```
+- MCP 配置说明见 [mcp/README.md](./mcp/README.md)
+- Skill 配置说明见 [skills/meting-agent/README.md](./skills/meting-agent/README.md)
+- 贡献流程与同步机制（编译时报错）说明见 [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)
 
-构建 skill release bundle：
+## 致谢
 
-```powershell
-node scripts/build-skill-release.mjs
-```
+感谢 **[metowolf/Meting](https://github.com/metowolf/Meting)** 提供跨平台统一接口与各平台 provider 实现
 
-验证 MCP 子项目：
+---
 
-```powershell
-cd mcp
-npm install
-npm run verify
-```
-
-本地验证 skill release bundle：
-
-```powershell
-node scripts/build-skill-release.mjs
-node dist/meting-agent-skill/scripts/meting-cli.mjs platforms
-node dist/meting-agent-skill/scripts/meting-cli.mjs search --platform netease --keyword "我怀念的" --limit 3
-```
-
-## 维护原则
-
-- 只在 `shared/core-src/` 修改核心实现。
-- `mcp/src/meting.js` 和 `mcp/src/providers/` 由同步脚本生成，不直接维护。
-- skill 的运行时副本只在 `dist/meting-agent-skill/` 构建时生成，用户从 GitHub Release 下载，不克隆源码仓库。
+关键词: MCP Server | Model Context Protocol | Music API | Node.js MCP | AI Tool Integration | AI Skills | Reusable Skills | NetEase Cloud Music | Tencent QQ Music | KuGou Music | Baidu Music | Taihe Music | Qianqian Music | Kuwo Music | Lyrics API | Playlist API
