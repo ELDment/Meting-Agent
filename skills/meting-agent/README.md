@@ -4,7 +4,7 @@
 
 ## 下载
 
-skill 不通过 npm 发布，下载入口是 [GitHub Releases](https://github.com/ELDment/Meting-Agent/releases)
+不通过 npm 发布，下载入口是 [GitHub Releases](https://github.com/ELDment/Meting-Agent/releases)
 
 ## Cookie 规则
 

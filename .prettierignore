@@ -1,6 +1,7 @@
 dist/
 node_modules/
 *.md
+.github/workflows/release.yml
 
 mcp/.inspect/
 mcp/.probe/
