@@ -13,6 +13,8 @@
   "files": [
     "src",
     "README.md",
+    "README.zh-Hant.md",
+    "README.EN.md",
     "LICENSE"
   ],
   "scripts": {
