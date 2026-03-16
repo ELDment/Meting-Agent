@@ -1,6 +1,6 @@
 ---
 name: meting-agent
-description: Use when Codex needs direct music lookup capabilities through bundled Meting scripts in this skill, including song search, album lookup, artist lookup, playlist lookup, lyrics, cover URLs, and playback URLs, or when it needs to maintain this skill's standalone music client implementation.
+description: Use when an AI agent needs direct music lookup capabilities through the bundled Meting scripts in this skill, including song search, album lookup, artist lookup, playlist lookup, lyrics, cover URLs, and playback URLs, or when it needs to maintain this skill's standalone music client implementation.
 ---
 
 # Meting Agent
@@ -16,7 +16,7 @@ description: Use when Codex needs direct music lookup capabilities through bundl
 1. Run `node scripts/meting-cli.mjs platforms` to inspect supported platforms.
 2. Run `node scripts/meting-cli.mjs search --platform netease --keyword "我怀念的" --limit 3` for search tasks.
 3. Run `node scripts/meting-cli.mjs song --platform netease --id <songId>` and related commands for detail lookups.
-4. Set `METING_<PLATFORM>_COOKIE` or `METING_COOKIE` before commands that need authenticated access.
+4. Remember the default cookie resolution order: environment variable `METING_<PLATFORM>_COOKIE` first, environment variable `METING_COOKIE` second, and CLI option `--cookie` only as the final override.
 
 ## Commands
 
@@ -32,6 +32,7 @@ description: Use when Codex needs direct music lookup capabilities through bundl
 
 ## Configuration Rules
 
-- Prefer `METING_<PLATFORM>_COOKIE` for per-platform cookies.
-- Use `METING_COOKIE` as a shared fallback.
-- Use `--cookie <value>` only when the call needs an explicit override.
+- Follow the default cookie resolution order used by the program: `METING_<PLATFORM>_COOKIE` first, `METING_COOKIE` second, and `--cookie <value>` last.
+- Treat `METING_<PLATFORM>_COOKIE` and `METING_COOKIE` as environment variable names, not CLI options.
+- Available environment variables include `METING_NETEASE_COOKIE`, `METING_TENCENT_COOKIE`, `METING_KUGOU_COOKIE`, `METING_BAIDU_COOKIE`, `METING_KUWO_COOKIE`, and shared fallback `METING_COOKIE`.
+- Use CLI option `--cookie <value>` only when the call needs an explicit one-off override.

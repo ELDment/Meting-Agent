@@ -8,11 +8,13 @@
 
 ## Cookie 规则
 
-- 优先使用 `METING_<PLATFORM>_COOKIE`
-- 其次使用 `METING_COOKIE`
-- 最后才使用命令参数 `--cookie`
+运行时按以下优先级取 Cookie：
 
-支持的平台环境变量：
+1. `METING_<PLATFORM>_COOKIE`
+2. `METING_COOKIE`
+3. 命令参数 `--cookie`
+
+支持的环境变量：
 
 - `METING_NETEASE_COOKIE`
 - `METING_TENCENT_COOKIE`
