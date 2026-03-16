@@ -38,10 +38,9 @@ jobs:
         package_name=$(node -p "JSON.parse(require('fs').readFileSync('mcp/package.json', 'utf8')).name")
         package_version=$(node -p "JSON.parse(require('fs').readFileSync('mcp/package.json', 'utf8')).version.split('-')[0]")
         stable_tag_pattern='^v[0-9]+\.[0-9]+\.[0-9]+$'
-        release_tag_pattern='^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$'
 
         latest_stable_tag=$(
-          git tag --merged HEAD --list 'v*' \
+          git tag --list 'v*' \
           | grep -E "$stable_tag_pattern" \
           | sort -V \
           | tail -n 1 \
@@ -71,6 +70,7 @@ jobs:
         notes_start_tag=""
 
         if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
+          # Dev prereleases should always advance from the latest published stable release.
           base_version="${next_patch_version}"
           full_version="${base_version}-dev.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}"
           release_tag="v${full_version}"
@@ -78,13 +78,20 @@ jobs:
           asset_name="meting-agent-skill-${full_version}.zip"
           npm_tag="prerelease"
           is_prerelease="true"
-          notes_start_tag=$(
-            git tag --merged HEAD --list 'v*' \
-            | grep -E "$release_tag_pattern" \
+
+          previous_dev_tag=$(
+            git tag --list "v${base_version}-dev.*" \
+            | grep -E "^v${base_version//./\\.}-dev\.[0-9]+\.[0-9]+$" \
             | sort -V \
             | tail -n 1 \
             || true
           )
+
+          if [[ -n "$previous_dev_tag" ]]; then
+            notes_start_tag="$previous_dev_tag"
+          else
+            notes_start_tag="${latest_stable_tag}"
+          fi
         else
           head_stable_tag=$(
             git tag --points-at HEAD --list 'v*' \
@@ -97,7 +104,7 @@ jobs:
           if [[ -n "$head_stable_tag" ]]; then
             base_version="${head_stable_tag#v}"
             notes_start_tag=$(
-              git tag --merged HEAD --list 'v*' \
+              git tag --list 'v*' \
               | grep -E "$stable_tag_pattern" \
               | grep -vx "$head_stable_tag" \
               | sort -V \
