@@ -188,7 +188,7 @@ jobs:
       shell: bash
       run: |
         cd dist
-        zip -r "${{ needs.versioning.outputs.assetName }}" meting-agent-skill
+        zip -r "${{ needs.versioning.outputs.assetName }}" skills
     - name: Publish GitHub release asset
       env:
         GH_TOKEN: ${{ github.token }}
