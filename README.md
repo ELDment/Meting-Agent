@@ -20,7 +20,7 @@
 
 ## 文档
 
-- MCP Server 配置说明见 [mcp/README.md](./mcp/README.md)
+- MCP 配置说明见 [mcp/README.md](./mcp/README.md)
 - Skill 配置说明见 [skills/meting-agent/README.md](./skills/meting-agent/README.md)
 - 贡献流程与同步机制（编译时报错）说明见 [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)
 
