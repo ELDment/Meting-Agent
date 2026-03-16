@@ -7,14 +7,58 @@ on:
       - dev
 
 concurrency:
-  group: release-${{ github.ref_name }}
+  group: release-${{ github.ref }}
   cancel-in-progress: true
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
+  versioning:
+    runs-on: ubuntu-latest
+    outputs:
+      packageName: ${{ steps.versioning.outputs.package_name }}
+      baseVersion: ${{ steps.versioning.outputs.base_version }}
+      fullVersion: ${{ steps.versioning.outputs.full_version }}
+      npmTag: ${{ steps.versioning.outputs.npm_tag }}
+      releaseTag: ${{ steps.versioning.outputs.release_tag }}
+      releaseTitle: ${{ steps.versioning.outputs.release_title }}
+      assetName: ${{ steps.versioning.outputs.asset_name }}
+      isPrerelease: ${{ steps.versioning.outputs.is_prerelease }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compute release version
+        id: versioning
+        shell: bash
+        run: |
+          package_name=$(node -p "JSON.parse(require('fs').readFileSync('mcp/package.json', 'utf8')).name")
+          base_version=$(node -p "JSON.parse(require('fs').readFileSync('mcp/package.json', 'utf8')).version.split('-')[0]")
+
+          if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
+            full_version="${base_version}-dev.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}"
+            npm_tag="prerelease"
+            is_prerelease="true"
+          else
+            full_version="${base_version}"
+            npm_tag="latest"
+            is_prerelease="false"
+          fi
+
+          release_tag="v${full_version}"
+          release_title="Release ${release_tag}"
+          asset_name="meting-agent-skill-${full_version}.zip"
+
+          echo "package_name=$package_name" >> "$GITHUB_OUTPUT"
+          echo "base_version=$base_version" >> "$GITHUB_OUTPUT"
+          echo "full_version=$full_version" >> "$GITHUB_OUTPUT"
+          echo "npm_tag=$npm_tag" >> "$GITHUB_OUTPUT"
+          echo "release_tag=$release_tag" >> "$GITHUB_OUTPUT"
+          echo "release_title=$release_title" >> "$GITHUB_OUTPUT"
+          echo "asset_name=$asset_name" >> "$GITHUB_OUTPUT"
+          echo "is_prerelease=$is_prerelease" >> "$GITHUB_OUTPUT"
+
   publish-npm:
+    needs: versioning
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -30,35 +74,28 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - run: npm ci
       - run: npm run verify
-      - name: Prepare npm release channel
-        id: npm-release
+      - name: Set package version for publish
         shell: bash
         run: |
-          if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
-            node -e 'const fs=require("node:fs"); const packagePath="package.json"; const packageJson=JSON.parse(fs.readFileSync(packagePath, "utf8")); const stableVersion=packageJson.version.split("-")[0]; packageJson.version=stableVersion + "-dev." + process.env.GITHUB_RUN_NUMBER; fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + "\n");'
-            echo "tag=prerelease" >> "$GITHUB_OUTPUT"
-          else
-            echo "tag=latest" >> "$GITHUB_OUTPUT"
-          fi
-          package_name=$(node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8')).name")
-          version=$(node -p "JSON.parse(require('fs').readFileSync('package.json', 'utf8')).version")
-          echo "package_name=$package_name" >> "$GITHUB_OUTPUT"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+          node -e 'const fs=require("node:fs"); const packagePath="package.json"; const packageJson=JSON.parse(fs.readFileSync(packagePath, "utf8")); packageJson.version=process.env.RELEASE_VERSION; fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + "\n");'
+        env:
+          RELEASE_VERSION: ${{ needs.versioning.outputs.fullVersion }}
       - name: Check npm version availability
         id: npm-version-check
         shell: bash
         run: |
-          if npm view "${{ steps.npm-release.outputs.package_name }}@${{ steps.npm-release.outputs.version }}" version --registry https://registry.npmjs.org > /dev/null 2>&1; then
+          if npm view "${{ needs.versioning.outputs.packageName }}@${{ needs.versioning.outputs.fullVersion }}" version --registry https://registry.npmjs.org > /dev/null 2>&1; then
             echo "should_publish=false" >> "$GITHUB_OUTPUT"
-            echo "Version ${{ steps.npm-release.outputs.version }} already exists on npm, skipping publish."
+            echo "Version ${{ needs.versioning.outputs.fullVersion }} already exists on npm, skipping publish."
           else
             echo "should_publish=true" >> "$GITHUB_OUTPUT"
           fi
       - name: Publish npm package
         if: steps.npm-version-check.outputs.should_publish == 'true'
-        run: npm publish --provenance --access public --tag "${{ steps.npm-release.outputs.tag }}"
+        run: npm publish --provenance --access public --tag "${{ needs.versioning.outputs.npmTag }}"
 
   release-skill:
+    needs: versioning
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -67,37 +104,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Prepare skill release channel
-        id: skill-release
-        shell: bash
-        run: |
-          if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
-            echo "release_tag=dev" >> "$GITHUB_OUTPUT"
-            echo "release_title=dev" >> "$GITHUB_OUTPUT"
-            echo "asset_name=meting-agent-skill-dev.zip" >> "$GITHUB_OUTPUT"
-            echo "is_prerelease=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "release_tag=main" >> "$GITHUB_OUTPUT"
-            echo "release_title=main" >> "$GITHUB_OUTPUT"
-            echo "asset_name=meting-agent-skill-main.zip" >> "$GITHUB_OUTPUT"
-            echo "is_prerelease=false" >> "$GITHUB_OUTPUT"
-          fi
       - name: Build skill release bundle
         run: node scripts/build-skill-release.mjs
       - name: Create zip archive
         shell: bash
         run: |
           cd dist
-          zip -r "${{ steps.skill-release.outputs.asset_name }}" meting-agent-skill
+          zip -r "${{ needs.versioning.outputs.assetName }}" meting-agent-skill
       - name: Publish GitHub release asset
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          asset="dist/${{ steps.skill-release.outputs.asset_name }}"
-          release_tag="${{ steps.skill-release.outputs.release_tag }}"
-          release_title="${{ steps.skill-release.outputs.release_title }}"
-          is_prerelease="${{ steps.skill-release.outputs.is_prerelease }}"
+          asset="dist/${{ needs.versioning.outputs.assetName }}"
+          release_tag="${{ needs.versioning.outputs.releaseTag }}"
+          release_title="${{ needs.versioning.outputs.releaseTitle }}"
+          is_prerelease="${{ needs.versioning.outputs.isPrerelease }}"
 
           if gh release view "$release_tag" > /dev/null 2>&1; then
             if [[ "$is_prerelease" == "true" ]]; then
