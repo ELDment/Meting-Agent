@@ -13,6 +13,7 @@
   "files": [
     "src",
     "README.md",
+    "SHOWCASE.png",
     "LICENSE"
   ],
   "scripts": {

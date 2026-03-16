@@ -8,7 +8,7 @@
 
 直接克隆后会遇到两个现实限制：
 
-- skill 的可分发产物位于 `dist/meting-agent-skill/scripts/meting/`，这个目录需要运行构建脚本后才会生成
+- skill 的可分发产物位于 `dist/skills/meting-agent/scripts/meting/`，这个目录需要运行构建脚本后才会生成
 - `mcp/` 的构建虽然会在其 npm scripts 中自动执行 `sync:core`，但如果你跳过同步前置步骤，直接按生成文件视角排查问题，很容易得到错误结论
 
 简化理解就是：这个仓库不是“每个交付物目录都自带完整、静态、可直接维护的源码副本”，而是先维护 `shared/meting/`，再生成给 `mcp/src/meting/` 和 skill 使用的副本

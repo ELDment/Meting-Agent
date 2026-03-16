@@ -24,7 +24,8 @@ const scriptDirectory = dirname(scriptPath);
 const repositoryRoot = resolve(scriptDirectory, "..");
 const sharedRoot = resolve(repositoryRoot, "shared", "meting");
 const skillSourceRoot = resolve(repositoryRoot, "skills", "meting-agent");
-const outputRoot = resolve(repositoryRoot, "dist", "meting-agent-skill");
+const legacyOutputRoot = resolve(repositoryRoot, "dist", "meting-agent-skill");
+const outputRoot = resolve(repositoryRoot, "dist", "skills", "meting-agent");
 const outputMetingRoot = resolve(outputRoot, "scripts", "meting");
 
 async function PathExists(path) {
@@ -91,6 +92,7 @@ async function Main() {
     throw new Error("skills/meting-agent not found.");
   }
 
+  await rm(legacyOutputRoot, { recursive: true, force: true });
   await rm(outputRoot, { recursive: true, force: true });
   await mkdir(outputRoot, { recursive: true });
 
