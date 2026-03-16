@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const generatedBanner = [
   "/**",
-  " * Generated from shared/core-src by scripts/sync-mcp-core.mjs.",
+  " * Generated from shared/meting by scripts/sync-mcp-core.mjs.",
   " * Do not edit this copy directly.",
   " */",
   "",
@@ -15,8 +15,8 @@ const generatedBanner = [
 const scriptPath = fileURLToPath(import.meta.url);
 const scriptDirectory = dirname(scriptPath);
 const repositoryRoot = resolve(scriptDirectory, "..");
-const sharedRoot = resolve(repositoryRoot, "shared", "core-src");
-const targetRoot = resolve(repositoryRoot, "mcp", "src");
+const sharedRoot = resolve(repositoryRoot, "shared", "meting");
+const targetRoot = resolve(repositoryRoot, "mcp", "src", "meting");
 
 async function PathExists(path) {
   try {
@@ -71,7 +71,7 @@ async function WriteGeneratedCopy(sourceRoot, destinationRoot, relativePath) {
 
 async function Main() {
   if (!(await PathExists(sharedRoot))) {
-    process.stdout.write("[sync-mcp] shared/core-src not found, skipping sync.\n");
+    process.stdout.write("[sync-mcp] shared/meting not found, skipping sync.\n");
     return;
   }
 

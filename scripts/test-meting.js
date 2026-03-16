@@ -1,4 +1,4 @@
-import Meting from "../mcp/src/meting.js";
+import Meting from "../shared/meting/meting.js";
 
 const supportedPlatforms = ["netease", "tencent", "kugou", "baidu", "kuwo"];
 

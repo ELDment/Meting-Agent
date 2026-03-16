@@ -7,10 +7,10 @@ description: Use when Codex needs direct music lookup capabilities through bundl
 
 ## Use The Bundled Implementation
 
-- In the release bundle, treat `./scripts/core` as the implementation root.
+- In the release bundle, treat `./scripts/meting` as the implementation root.
 - Use `./scripts/meting-cli.mjs` for normal lookup tasks.
 - Do not use `../../mcp` as a runtime dependency for this skill.
-- In the repository source, `../../shared/core-src` is the source of truth and `../../scripts/build-skill-release.mjs` builds the downloadable bundle.
+- Downloaded bundles are self-contained and should not rely on repository-relative paths.
 
 ## Core Workflow
 
@@ -40,4 +40,4 @@ description: Use when Codex needs direct music lookup capabilities through bundl
 ## Sync Rules
 
 - Runtime release bundles stay independent, but repository maintenance uses one shared source.
-- Update `shared/core-src` first, then run `node scripts/build-skill-release.mjs` from the repository root.
+- In the source repository, update `shared/meting/` first, then run `node scripts/build-skill-release.mjs` from the repository root.

@@ -1,7 +1,7 @@
 import { createRequire } from "module";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import * as z from "zod/v4";
-import Meting from "./meting.js";
+import Meting from "./meting/meting.js";
 
 const require = createRequire(import.meta.url);
 const { name: packageName, version } = require("../package.json");

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import Meting from "./core/meting.js";
+import Meting from "./meting/meting.js";
 
 const platformCatalog = Object.freeze([
   { name: "NetEase Cloud Music", code: "netease" },
