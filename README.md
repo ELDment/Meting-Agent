@@ -5,7 +5,15 @@
 - **MCP**：[@eldment/meting-agent](https://www.npmjs.com/package/@eldment/meting-agent)
 - **Skill**：[skills/meting-agent](https://github.com/ELDment/Meting-Agent/releases)
 
-## 能力
+## 功能
+
+<details>
+    <summary><b>运行截图</b></summary>
+
+![Meting-Agent Showcase](./docs/SHOWCASE.png)
+</details>
+
+统一接口：
 
 - `search`：按关键字搜索歌曲、专辑、歌手或平台特定资源
 - `song`：按歌曲 ID 获取歌曲详情
