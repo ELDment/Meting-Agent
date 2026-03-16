@@ -6,7 +6,7 @@
 - **Skill**：[skills/meting-agent](https://github.com/ELDment/Meting-Agent/releases)
 
 <details>
-    <summary><b>运行截图</b></summary>
+<summary><b>运行截图</b></summary>
 
 ![Meting-Agent Showcase](./mcp/SHOWCASE.png)
 </details>
