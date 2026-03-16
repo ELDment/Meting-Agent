@@ -36,9 +36,9 @@ jobs:
       shell: bash
       run: |
         package_name=$(node -p "JSON.parse(require('fs').readFileSync('mcp/package.json', 'utf8')).name")
+        package_version=$(node -p "JSON.parse(require('fs').readFileSync('mcp/package.json', 'utf8')).version.split('-')[0]")
         stable_tag_pattern='^v[0-9]+\.[0-9]+\.[0-9]+$'
         release_tag_pattern='^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$'
-        default_start_version="0.1.0"
 
         latest_stable_tag=$(
           git tag --merged HEAD --list 'v*' \
@@ -51,14 +51,13 @@ jobs:
         if [[ -n "$latest_stable_tag" ]]; then
           current_stable_version="${latest_stable_tag#v}"
         else
-          current_stable_version=""
+          current_stable_version="${package_version}"
+          echo "::warning::No stable git tag found on origin. Falling back to mcp/package.json version ${package_version} as the release base."
         fi
 
         if [[ -n "$current_stable_version" ]]; then
           IFS='.' read -r major_version minor_version patch_version <<< "$current_stable_version"
           next_patch_version="${major_version}.${minor_version}.$((patch_version + 1))"
-        else
-          next_patch_version="$default_start_version"
         fi
 
         should_release="true"
