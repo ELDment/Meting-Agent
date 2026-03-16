@@ -13,6 +13,9 @@ const generatedBanner = [
 ].join("\r\n");
 
 const staticFiles = Object.freeze([
+  "README.md",
+  "README.zh-Hant.md",
+  "README.EN.md",
   "SKILL.md",
   "agents/openai.yaml",
   "scripts/package.json",

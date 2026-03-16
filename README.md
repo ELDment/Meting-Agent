@@ -1,3 +1,5 @@
+<p align="right"><strong>简体中文</strong> | <a href="./README.zh-Hant.md">繁體中文</a> | <a href="./README.EN.md">English</a></p>
+
 # Meting-Agent
 
 `Meting-Agent` 是基于 **[metowolf/Meting](https://github.com/metowolf/Meting)** 构建的多平台音乐能力封装，当前提供两类交付物：
@@ -6,9 +8,9 @@
 - **Skill**：[skills/meting-agent](https://github.com/ELDment/Meting-Agent/releases)
 
 <details>
-    <summary><b>运行截图</b></summary>
+<summary><b>运行截图</b></summary>
 
-![Meting-Agent Showcase](./mcp/SHOWCASE.png)
+![Meting-Agent Showcase](./SHOWCASE.png)
 </details>
 
 ## 功能

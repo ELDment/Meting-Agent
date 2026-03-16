@@ -1,3 +1,7 @@
+<p align="right"><strong>简体中文</strong> | <a href="./CONTRIBUTING.zh-Hant.md">繁體中文</a> | <a href="./CONTRIBUTING.EN.md">English</a></p>
+
+<p align="right"><a href="../README.md">⬅️ 返回主页</a></p>
+
 # CONTRIBUTING
 
 本仓库采用“共享源码 + 生成副本”的维护方式。提交修改前，请先理解同步关系，否则很容易改到错误位置
