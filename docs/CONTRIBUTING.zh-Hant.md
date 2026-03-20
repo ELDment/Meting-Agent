@@ -4,25 +4,25 @@
 
 # CONTRIBUTING
 
-這個倉庫使用「共享原始碼 + 生成副本」的維護方式。提交修改前，請先理解同步關係，否則很容易改錯位置。
+本倉庫採用「共享原始碼 + 生成副本」的維護方式。提交修改前，請先理解同步關係，否則很容易改到錯誤位置
 
-## 目錄職責
+## 為什麼剛 clone 後不能直接編譯
 
-- `shared/meting/`：唯一核心實作原始碼
-- `skill-source/meting-agent/`：Skill 外殼原始碼，包含 `README`、`SKILL.md`、agent 設定與 CLI
-- `skills/meting-agent/`：提交到倉庫的生成目錄，用於 GitHub 倉庫型一鍵安裝
-- `dist/skills/meting-agent/`：release 階段暫時生成的分發目錄，不提交
-- `mcp/src/meting/`：由 `shared/meting/` 生成的 MCP 執行時副本
+倉庫預設只保留共享原始碼，不提交 skill release 產物，也不會把 `shared/meting/` 的全部執行時副本長期維護在每個目標目錄中
 
-簡化理解就是：真正可維護的原始碼入口只有 `shared/meting/` 與 `skill-source/meting-agent/`。`skills/meting-agent/` 雖然會提交到倉庫，但它仍然是生成目錄，不要直接修改。
+直接 clone 後會遇到兩個現實限制：
+
+- skill 的可分發產物位於 `dist/skills/meting-agent/scripts/meting/`，這個目錄需要執行建構腳本後才會生成
+- `mcp/` 的建構雖然會在其 npm scripts 中自動執行 `sync:core`，但如果你跳過同步前置步驟，直接從生成檔案視角排查問題，很容易得到錯誤結論
+
+簡化理解就是：這個倉庫不是「每個交付物目錄都自帶完整、靜態、可直接維護的原始碼副本」，而是先維護 `shared/meting/`，再生成給 `mcp/src/meting/` 和 skill 使用的副本
 
 ## 推薦修改流程
 
 1. 先在 `shared/meting/` 修改核心邏輯
-2. 在 `skill-source/meting-agent/` 修改 Skill 外殼檔案
-3. 執行同步腳本生成 `mcp` 與 `skills` 副本
-4. 執行構建腳本生成 skill release bundle
-5. 分別驗證 `mcp` 與 skill 產物
+2. 執行同步腳本生成 `mcp` 副本
+3. 執行建構腳本生成 skill release bundle
+4. 分別驗證 `mcp` 與 skill 產物
 
 ## 常用命令
 
@@ -32,22 +32,10 @@
 node scripts/sync-mcp-core.mjs
 ```
 
-同步可提交的 skill 安裝目錄：
-
-```powershell
-node scripts/sync-skills.mjs
-```
-
-構建 skill release bundle：
+建構 skill release bundle：
 
 ```powershell
 node scripts/build-skill-release.mjs
-```
-
-校驗 `skills/` 沒有被手動修改：
-
-```powershell
-npm run verify:skills
 ```
 
 驗證根目錄文件格式：
@@ -64,16 +52,9 @@ npm install
 npm run verify
 ```
 
-## `skills/` 目錄規則
-
-- `skills/meting-agent/` 是生成目錄，不是手寫原始碼目錄
-- 不要直接修改 `skills/meting-agent/`；CI 會執行 `node scripts/sync-skills.mjs` 並檢查該目錄是否出現 diff
-- 如果你想改 `README.md`、`SKILL.md`、`scripts/meting-cli.mjs` 或 `agents/openai.yaml`，請改 `skill-source/meting-agent/` 後重新同步
-
 ## 提交前檢查
 
 - 核心改動是否發生在 `shared/meting/`
-- Skill 外殼改動是否發生在 `skill-source/meting-agent/` 而不是 `skills/meting-agent/`
 - 是否重新生成了需要提交的副本或產物
 - 是否完成 `mcp` 驗證
 - 如果改了文件，是否通過 `npm run format:check`

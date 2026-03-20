@@ -4,9 +4,7 @@
   "type": "module",
   "scripts": {
     "sync:mcp": "node scripts/sync-mcp-core.mjs",
-    "sync:skills": "node scripts/sync-skills.mjs",
     "build:skill": "node scripts/build-skill-release.mjs",
-    "verify:skills": "node scripts/sync-skills.mjs && git diff --exit-code -- skills",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

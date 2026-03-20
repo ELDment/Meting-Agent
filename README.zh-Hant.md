@@ -33,7 +33,7 @@
 
 - MCP 設定說明見 [mcp/README.zh-Hant.md](./mcp/README.zh-Hant.md)
 - Skill 設定說明見 [skills/meting-agent/README.zh-Hant.md](./skills/meting-agent/README.zh-Hant.md)
-- 貢獻流程與同步機制說明見 [docs/CONTRIBUTING.zh-Hant.md](./docs/CONTRIBUTING.zh-Hant.md)
+- 貢獻流程與同步機制（編譯時報錯）說明見 [docs/CONTRIBUTING.zh-Hant.md](./docs/CONTRIBUTING.zh-Hant.md)
 
 ## 致謝
 
@@ -41,4 +41,4 @@
 
 ---
 
-關鍵詞：MCP Server | Model Context Protocol | Music API | Node.js MCP | AI Tool Integration | AI Skills | Reusable Skills | NetEase Cloud Music | Tencent QQ Music | KuGou Music | Kuwo Music | Lyrics API | Playlist API
+關鍵詞: MCP Server | Model Context Protocol | Music API | Node.js MCP | AI Tool Integration | AI Skills | Reusable Skills | NetEase Cloud Music | Tencent QQ Music | KuGou Music | Kuwo Music | Lyrics API | Playlist API

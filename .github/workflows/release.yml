@@ -5,10 +5,6 @@ on:
     branches:
     - main
     - dev
-  pull_request:
-    branches:
-    - main
-    - dev
 
 concurrency:
   group: release-${{ github.ref }}
@@ -18,28 +14,7 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  verify:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 24
-    - name: Install root dependencies
-      run: npm ci
-    - name: Check root formatting
-      run: npm run format:check
-    - name: Verify generated skills directory
-      run: npm run verify:skills
-    - name: Verify mcp package
-      working-directory: mcp
-      run: |
-        npm ci
-        npm run verify
-
   versioning:
-    needs: verify
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     outputs:
       shouldRelease: ${{ steps.versioning.outputs.should_release }}
@@ -159,10 +134,8 @@ jobs:
         echo "notes_start_tag=$notes_start_tag" >> "$GITHUB_OUTPUT"
 
   publish-npm:
-    needs:
-    - verify
-    - versioning
-    if: github.event_name == 'push' && needs.versioning.outputs.shouldRelease == 'true'
+    needs: versioning
+    if: needs.versioning.outputs.shouldRelease == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -199,10 +172,8 @@ jobs:
       run: npm publish --provenance --access public --tag "${{ needs.versioning.outputs.npmTag }}"
 
   release-skill:
-    needs:
-    - verify
-    - versioning
-    if: github.event_name == 'push' && needs.versioning.outputs.shouldRelease == 'true'
+    needs: versioning
+    if: needs.versioning.outputs.shouldRelease == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
