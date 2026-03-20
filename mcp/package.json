@@ -18,7 +18,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "sync:core": "node ../scripts/sync-mcp-core.mjs",
+    "sync:core": "node ../scripts/sync-generated.mjs sync mcp",
     "start": "npm run sync:core && node src/index.js",
     "lint": "npm run sync:core && node --check src/index.js && node --check src/mcp-server.js && node --check src/meting/meting.js && node --check src/meting/providers/index.js",
     "build": "npm run sync:core && npm pack --dry-run",

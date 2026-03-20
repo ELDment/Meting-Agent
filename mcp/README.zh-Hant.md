@@ -7,8 +7,9 @@
 `Meting-Agent` 是基於 **[metowolf/Meting](https://github.com/metowolf/Meting)** 建構的 MCP 服務，支援 [網易雲音樂](https://music.163.com/)（`netease`）、[騰訊音樂](https://y.qq.com/)（`tencent`）、[酷狗音樂](https://www.kugou.com/)（`kugou`）、[酷我音樂](https://www.kuwo.cn/)（`kuwo`）等音樂平台，提供搜尋、歌曲、專輯、歌手、歌單、播放連結、歌詞、封面等能力
 
 <details>
-<summary><b>執行截圖</b></summary>
+<summary><b>執行截圖 🎨</b></summary>
 
+![Meting-Agent Showcase](../SHOWCASE.OPENCLAW.png)
 ![Meting-Agent Showcase](../SHOWCASE.png)
 </details>
 

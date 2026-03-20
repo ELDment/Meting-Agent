@@ -1,10 +1,9 @@
 *.md
 *.yml
-dist/
 node_modules/
 
 mcp/.inspect/
 mcp/.probe/
 mcp/node_modules/
-mcp/src/meting/meting.js
-mcp/src/meting/providers/
+mcp/src/meting/
+skills/meting-agent/scripts/meting/

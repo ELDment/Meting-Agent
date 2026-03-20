@@ -3,8 +3,8 @@ name: release
 on:
   push:
     branches:
-    - main
-    - dev
+      - main
+      - dev
 
 concurrency:
   group: release-${{ github.ref }}
@@ -28,113 +28,156 @@ jobs:
       isPrerelease: ${{ steps.versioning.outputs.is_prerelease }}
       notesStartTag: ${{ steps.versioning.outputs.notes_start_tag }}
     steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-    - name: Compute release version
-      id: versioning
-      shell: bash
-      run: |
-        package_name=$(node -p "JSON.parse(require('fs').readFileSync('mcp/package.json', 'utf8')).name")
-        package_version=$(node -p "JSON.parse(require('fs').readFileSync('mcp/package.json', 'utf8')).version.split('-')[0]")
-        stable_tag_pattern='^v[0-9]+\.[0-9]+\.[0-9]+$'
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compute release version
+        id: versioning
+        shell: bash
+        run: |
+          package_name=$(node -p "JSON.parse(require('fs').readFileSync('mcp/package.json', 'utf8')).name")
+          package_version=$(node -p "JSON.parse(require('fs').readFileSync('mcp/package.json', 'utf8')).version.split('-')[0]")
+          stable_tag_pattern='^v[0-9]+\.[0-9]+\.[0-9]+$'
 
-        latest_stable_tag=$(
-          git tag --list 'v*' \
-          | grep -E "$stable_tag_pattern" \
-          | sort -V \
-          | tail -n 1 \
-          || true
-        )
-
-        if [[ -n "$latest_stable_tag" ]]; then
-          current_stable_version="${latest_stable_tag#v}"
-        else
-          current_stable_version="${package_version}"
-          echo "::warning::No stable git tag found on origin. Falling back to mcp/package.json version ${package_version} as the release base."
-        fi
-
-        if [[ -n "$current_stable_version" ]]; then
-          IFS='.' read -r major_version minor_version patch_version <<< "$current_stable_version"
-          next_patch_version="${major_version}.${minor_version}.$((patch_version + 1))"
-        fi
-
-        should_release="true"
-        npm_tag="latest"
-        is_prerelease="false"
-        base_version=""
-        full_version=""
-        release_tag=""
-        release_title=""
-        asset_name=""
-        notes_start_tag=""
-
-        if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
-          # Dev prereleases should always advance from the latest published stable release.
-          base_version="${next_patch_version}"
-          full_version="${base_version}-dev.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}"
-          release_tag="v${full_version}"
-          release_title="Release ${release_tag}"
-          asset_name="meting-agent-skill-${full_version}.zip"
-          npm_tag="prerelease"
-          is_prerelease="true"
-
-          previous_dev_tag=$(
-            git tag --list "v${base_version}-dev.*" \
-            | grep -E "^v${base_version//./\\.}-dev\.[0-9]+\.[0-9]+$" \
-            | sort -V \
-            | tail -n 1 \
-            || true
-          )
-
-          if [[ -n "$previous_dev_tag" ]]; then
-            notes_start_tag="$previous_dev_tag"
-          else
-            notes_start_tag="${latest_stable_tag}"
-          fi
-        else
-          head_stable_tag=$(
-            git tag --points-at HEAD --list 'v*' \
+          latest_stable_tag=$(
+            git tag --list 'v*' \
             | grep -E "$stable_tag_pattern" \
             | sort -V \
             | tail -n 1 \
             || true
           )
 
-          if [[ -n "$head_stable_tag" ]]; then
-            base_version="${head_stable_tag#v}"
-            notes_start_tag=$(
-              git tag --list 'v*' \
-              | grep -E "$stable_tag_pattern" \
-              | grep -vx "$head_stable_tag" \
+          if [[ -n "$latest_stable_tag" ]]; then
+            current_stable_version="${latest_stable_tag#v}"
+          else
+            current_stable_version="${package_version}"
+            echo "::warning::No stable git tag found on origin. Falling back to mcp/package.json version ${package_version} as the release base."
+          fi
+
+          if [[ -n "$current_stable_version" ]]; then
+            IFS='.' read -r major_version minor_version patch_version <<< "$current_stable_version"
+            next_patch_version="${major_version}.${minor_version}.$((patch_version + 1))"
+          fi
+
+          should_release="true"
+          npm_tag="latest"
+          is_prerelease="false"
+          base_version=""
+          full_version=""
+          release_tag=""
+          release_title=""
+          asset_name=""
+          notes_start_tag=""
+
+          if [[ "${GITHUB_REF_NAME}" == "dev" ]]; then
+            # Dev prereleases should always advance from the latest published stable release.
+            base_version="${next_patch_version}"
+            full_version="${base_version}-dev.${GITHUB_RUN_NUMBER}.${GITHUB_RUN_ATTEMPT}"
+            release_tag="v${full_version}"
+            release_title="Release ${release_tag}"
+            asset_name="meting-agent-skill-${full_version}.zip"
+            npm_tag="prerelease"
+            is_prerelease="true"
+
+            previous_dev_tag=$(
+              git tag --list "v${base_version}-dev.*" \
+              | grep -E "^v${base_version//./\\.}-dev\.[0-9]+\.[0-9]+$" \
               | sort -V \
               | tail -n 1 \
               || true
             )
+
+            if [[ -n "$previous_dev_tag" ]]; then
+              notes_start_tag="$previous_dev_tag"
+            else
+              notes_start_tag="${latest_stable_tag}"
+            fi
           else
-            base_version="${next_patch_version}"
-            notes_start_tag="${latest_stable_tag}"
+            head_stable_tag=$(
+              git tag --points-at HEAD --list 'v*' \
+              | grep -E "$stable_tag_pattern" \
+              | sort -V \
+              | tail -n 1 \
+              || true
+            )
+
+            if [[ -n "$head_stable_tag" ]]; then
+              base_version="${head_stable_tag#v}"
+              notes_start_tag=$(
+                git tag --list 'v*' \
+                | grep -E "$stable_tag_pattern" \
+                | grep -vx "$head_stable_tag" \
+                | sort -V \
+                | tail -n 1 \
+                || true
+              )
+            else
+              base_version="${next_patch_version}"
+              notes_start_tag="${latest_stable_tag}"
+            fi
+
+            full_version="${base_version}"
+            release_tag="v${full_version}"
+            release_title="Release ${release_tag}"
+            asset_name="meting-agent-skill-${full_version}.zip"
           fi
 
-          full_version="${base_version}"
-          release_tag="v${full_version}"
-          release_title="Release ${release_tag}"
-          asset_name="meting-agent-skill-${full_version}.zip"
-        fi
+          echo "should_release=$should_release" >> "$GITHUB_OUTPUT"
+          echo "package_name=$package_name" >> "$GITHUB_OUTPUT"
+          echo "base_version=$base_version" >> "$GITHUB_OUTPUT"
+          echo "full_version=$full_version" >> "$GITHUB_OUTPUT"
+          echo "npm_tag=$npm_tag" >> "$GITHUB_OUTPUT"
+          echo "release_tag=$release_tag" >> "$GITHUB_OUTPUT"
+          echo "release_title=$release_title" >> "$GITHUB_OUTPUT"
+          echo "asset_name=$asset_name" >> "$GITHUB_OUTPUT"
+          echo "is_prerelease=$is_prerelease" >> "$GITHUB_OUTPUT"
+          echo "notes_start_tag=$notes_start_tag" >> "$GITHUB_OUTPUT"
 
-        echo "should_release=$should_release" >> "$GITHUB_OUTPUT"
-        echo "package_name=$package_name" >> "$GITHUB_OUTPUT"
-        echo "base_version=$base_version" >> "$GITHUB_OUTPUT"
-        echo "full_version=$full_version" >> "$GITHUB_OUTPUT"
-        echo "npm_tag=$npm_tag" >> "$GITHUB_OUTPUT"
-        echo "release_tag=$release_tag" >> "$GITHUB_OUTPUT"
-        echo "release_title=$release_title" >> "$GITHUB_OUTPUT"
-        echo "asset_name=$asset_name" >> "$GITHUB_OUTPUT"
-        echo "is_prerelease=$is_prerelease" >> "$GITHUB_OUTPUT"
-        echo "notes_start_tag=$notes_start_tag" >> "$GITHUB_OUTPUT"
+  sync-generated:
+    needs: versioning
+    if: needs.versioning.outputs.shouldRelease == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      syncedSha: ${{ steps.reconcile-generated.outputs.synced_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Reconcile generated copies
+        id: reconcile-generated
+        shell: bash
+        run: |
+          set +e
+          node scripts/sync-generated.mjs check all
+          check_status=$?
+          set -e
+
+          if [[ "$check_status" -eq 10 ]]; then
+            node scripts/sync-generated.mjs sync all
+            git add -A mcp/src/meting skills/meting-agent/scripts/meting
+
+            if ! git diff --cached --quiet; then
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git commit -m "[skip ci] chore: Sync generated meting runtime"
+              git push origin "HEAD:${GITHUB_REF_NAME}"
+            fi
+          elif [[ "$check_status" -ne 0 ]]; then
+            exit "$check_status"
+          fi
+
+          echo "synced_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
   publish-npm:
-    needs: versioning
+    needs:
+      - versioning
+      - sync-generated
     if: needs.versioning.outputs.shouldRelease == 'true'
     runs-on: ubuntu-latest
     permissions:
@@ -144,78 +187,84 @@ jobs:
       run:
         working-directory: mcp
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 24
-        registry-url: "https://registry.npmjs.org"
-    - run: npm ci
-    - run: npm run verify
-    - name: Set package version for publish
-      shell: bash
-      run: |
-        node -e 'const fs=require("node:fs"); const packagePath="package.json"; const packageJson=JSON.parse(fs.readFileSync(packagePath, "utf8")); packageJson.version=process.env.RELEASE_VERSION; fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + "\n");'
-      env:
-        RELEASE_VERSION: ${{ needs.versioning.outputs.fullVersion }}
-    - name: Check npm version availability
-      id: npm-version-check
-      shell: bash
-      run: |
-        if npm view "${{ needs.versioning.outputs.packageName }}@${{ needs.versioning.outputs.fullVersion }}" version --registry https://registry.npmjs.org > /dev/null 2>&1; then
-          echo "should_publish=false" >> "$GITHUB_OUTPUT"
-          echo "Version ${{ needs.versioning.outputs.fullVersion }} already exists on npm, skipping publish."
-        else
-          echo "should_publish=true" >> "$GITHUB_OUTPUT"
-        fi
-    - name: Publish npm package
-      if: steps.npm-version-check.outputs.should_publish == 'true'
-      run: npm publish --provenance --access public --tag "${{ needs.versioning.outputs.npmTag }}"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.sync-generated.outputs.syncedSha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+      - run: npm ci
+      - run: npm run verify
+      - name: Set package version for publish
+        shell: bash
+        run: |
+          node -e 'const fs=require("node:fs"); const packagePath="package.json"; const packageJson=JSON.parse(fs.readFileSync(packagePath, "utf8")); packageJson.version=process.env.RELEASE_VERSION; fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2) + "\n");'
+        env:
+          RELEASE_VERSION: ${{ needs.versioning.outputs.fullVersion }}
+      - name: Check npm version availability
+        id: npm-version-check
+        shell: bash
+        run: |
+          if npm view "${{ needs.versioning.outputs.packageName }}@${{ needs.versioning.outputs.fullVersion }}" version --registry https://registry.npmjs.org > /dev/null 2>&1; then
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "Version ${{ needs.versioning.outputs.fullVersion }} already exists on npm, skipping publish."
+          else
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publish npm package
+        if: steps.npm-version-check.outputs.should_publish == 'true'
+        run: npm publish --provenance --access public --tag "${{ needs.versioning.outputs.npmTag }}"
 
   release-skill:
-    needs: versioning
+    needs:
+      - versioning
+      - sync-generated
     if: needs.versioning.outputs.shouldRelease == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 24
-    - name: Build skill release bundle
-      run: node scripts/build-skill-release.mjs
-    - name: Create zip archive
-      shell: bash
-      run: |
-        cd dist
-        zip -r "${{ needs.versioning.outputs.assetName }}" skills
-    - name: Publish GitHub release asset
-      env:
-        GH_TOKEN: ${{ github.token }}
-      shell: bash
-      run: |
-        asset="dist/${{ needs.versioning.outputs.assetName }}"
-        release_tag="${{ needs.versioning.outputs.releaseTag }}"
-        release_title="${{ needs.versioning.outputs.releaseTitle }}"
-        is_prerelease="${{ needs.versioning.outputs.isPrerelease }}"
-        notes_start_tag="${{ needs.versioning.outputs.notesStartTag }}"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.sync-generated.outputs.syncedSha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Create zip archive
+        id: archive
+        shell: bash
+        run: |
+          asset_path="${RUNNER_TEMP}/${{ needs.versioning.outputs.assetName }}"
+          zip -r "$asset_path" skills/meting-agent
+          echo "asset_path=$asset_path" >> "$GITHUB_OUTPUT"
+      - name: Publish GitHub release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          asset="${{ steps.archive.outputs.asset_path }}"
+          release_tag="${{ needs.versioning.outputs.releaseTag }}"
+          release_title="${{ needs.versioning.outputs.releaseTitle }}"
+          is_prerelease="${{ needs.versioning.outputs.isPrerelease }}"
+          notes_start_tag="${{ needs.versioning.outputs.notesStartTag }}"
 
-        if gh release view "$release_tag" > /dev/null 2>&1; then
-          if [[ "$is_prerelease" == "true" ]]; then
-            gh release edit "$release_tag" --title "$release_title" --prerelease
+          if gh release view "$release_tag" > /dev/null 2>&1; then
+            if [[ "$is_prerelease" == "true" ]]; then
+              gh release edit "$release_tag" --title "$release_title" --prerelease
+            else
+              gh release edit "$release_tag" --title "$release_title" --latest
+            fi
+            gh release upload "$release_tag" "$asset" --clobber
           else
-            gh release edit "$release_tag" --title "$release_title" --latest
-          fi
-          gh release upload "$release_tag" "$asset" --clobber
-        else
-          notes_args=()
-          if [[ -n "$notes_start_tag" ]]; then
-            notes_args+=(--notes-start-tag "$notes_start_tag")
-          fi
+            notes_args=()
+            if [[ -n "$notes_start_tag" ]]; then
+              notes_args+=(--notes-start-tag "$notes_start_tag")
+            fi
 
-          if [[ "$is_prerelease" == "true" ]]; then
-            gh release create "$release_tag" "$asset" --target "${GITHUB_SHA}" --title "$release_title" --prerelease --generate-notes "${notes_args[@]}"
-          else
-            gh release create "$release_tag" "$asset" --target "${GITHUB_SHA}" --title "$release_title" --generate-notes "${notes_args[@]}"
+            if [[ "$is_prerelease" == "true" ]]; then
+              gh release create "$release_tag" "$asset" --target "${{ needs.sync-generated.outputs.syncedSha }}" --title "$release_title" --prerelease --generate-notes "${notes_args[@]}"
+            else
+              gh release create "$release_tag" "$asset" --target "${{ needs.sync-generated.outputs.syncedSha }}" --title "$release_title" --generate-notes "${notes_args[@]}"
+            fi
           fi
-        fi
