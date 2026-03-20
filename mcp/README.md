@@ -42,7 +42,7 @@ Claude 配置示例：
         "@eldment/meting-agent@latest"
       ],
       "env": {
-        "METING_NETEASE_COOKIE": "__csrf=...; MUSIC_U=...; NMTID=...; __remember_me=true;",
+        "METING_NETEASE_COOKIE": "__csrf=...; MUSIC_U=...; NMTID=...;",
         "METING_TENCENT_COOKIE": "uin=...; qm_keyst=...; qqmusic_key=...;",
         "METING_KUGOU_COOKIE": "KugooID=...; t=...; dfid=...; mid=...;",
         "METING_BAIDU_COOKIE": "...",
@@ -65,7 +65,7 @@ args = [
     "@eldment/meting-agent@latest",
 ]
 env = {
-    METING_NETEASE_COOKIE = "__csrf=...; MUSIC_U=...; NMTID=...; __remember_me=true;",
+    METING_NETEASE_COOKIE = "__csrf=...; MUSIC_U=...; NMTID=...;",
     METING_TENCENT_COOKIE = "uin=...; qm_keyst=...; qqmusic_key=...;",
     METING_KUGOU_COOKIE = "KugooID=...; t=...; dfid=...; mid=...;",
     METING_BAIDU_COOKIE = "...",

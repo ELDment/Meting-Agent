@@ -27,7 +27,7 @@ export default class NeteaseProvider extends BaseProvider {
         Math.random() * 1000
       )
         .toString()
-        .padStart(4, "0")}; __remember_me=true`,
+        .padStart(4, "0")}; __remember_me=true;`,
       "User-Agent":
         "Mozilla/5.0 (Linux; Android 11; M2007J3SC Build/RKQ1.200826.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045714 Mobile Safari/537.36 NeteaseMusic/8.7.01",
       Accept: "*/*",
