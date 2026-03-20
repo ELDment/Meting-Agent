@@ -1,5 +1,5 @@
 /**
- * Generated from shared/meting by scripts/sync-mcp-core.mjs.
+ * Generated from shared/meting by scripts/sync-generated.mjs sync mcp.
  * Do not edit this copy directly.
  */
 import BaseProvider from "./base.js";

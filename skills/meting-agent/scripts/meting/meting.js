@@ -1,5 +1,5 @@
 /**
- * Generated from shared/meting by scripts/build-skill-release.mjs.
+ * Generated from shared/meting by scripts/sync-generated.mjs sync skill.
  * Do not edit this copy directly.
  */
 /**

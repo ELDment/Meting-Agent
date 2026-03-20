@@ -36,13 +36,13 @@ npm run sync:all
 只同步 `mcp/` 副本：
 
 ```powershell
-node scripts/sync-mcp-core.mjs
+npm run sync:mcp
 ```
 
 只同步 skill 副本：
 
 ```powershell
-node scripts/build-skill-release.mjs
+npm run sync:skill
 ```
 
 驗證根目錄文件格式：

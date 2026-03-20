@@ -36,13 +36,13 @@ npm run sync:all
 Sync only the `mcp/` copy:
 
 ```powershell
-node scripts/sync-mcp-core.mjs
+npm run sync:mcp
 ```
 
 Sync only the skill copy:
 
 ```powershell
-node scripts/build-skill-release.mjs
+npm run sync:skill
 ```
 
 Verify root-level document formatting:

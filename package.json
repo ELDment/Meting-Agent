@@ -3,9 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "sync:mcp": "node scripts/sync-mcp-core.mjs",
-    "sync:skill": "node scripts/build-skill-release.mjs",
-    "sync:all": "npm run sync:mcp && npm run sync:skill",
+    "check:mcp": "node scripts/sync-generated.mjs check mcp",
+    "check:skill": "node scripts/sync-generated.mjs check skill",
+    "check:all": "node scripts/sync-generated.mjs check all",
+    "sync:mcp": "node scripts/sync-generated.mjs sync mcp",
+    "sync:skill": "node scripts/sync-generated.mjs sync skill",
+    "sync:all": "node scripts/sync-generated.mjs sync all",
     "build:skill": "npm run sync:skill",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

@@ -140,7 +140,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      syncedSha: ${{ steps.capture-head.outputs.synced_sha }}
+      syncedSha: ${{ steps.reconcile-generated.outputs.synced_sha }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -149,26 +149,29 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Sync generated shared core
-        run: npm run sync:all
-      - name: Commit synced copies
+      - name: Reconcile generated copies
+        id: reconcile-generated
         shell: bash
         run: |
-          git add -A mcp/src/meting skills/meting-agent/scripts/meting
+          set +e
+          node scripts/sync-generated.mjs check all
+          check_status=$?
+          set -e
 
-          if git diff --cached --quiet; then
-            echo "Generated copies are already up to date."
-            exit 0
+          if [[ "$check_status" -eq 10 ]]; then
+            node scripts/sync-generated.mjs sync all
+            git add -A mcp/src/meting skills/meting-agent/scripts/meting
+
+            if ! git diff --cached --quiet; then
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git commit -m "[skip ci] chore: Sync generated meting runtime"
+              git push origin "HEAD:${GITHUB_REF_NAME}"
+            fi
+          elif [[ "$check_status" -ne 0 ]]; then
+            exit "$check_status"
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "[skip ci] chore: Sync generated meting runtime"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
-      - name: Capture synced HEAD
-        id: capture-head
-        shell: bash
-        run: |
           echo "synced_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
   publish-npm:
@@ -191,9 +194,6 @@ jobs:
         with:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
-      - name: Sync generated shared core
-        working-directory: .
-        run: npm run sync:all
       - run: npm ci
       - run: npm run verify
       - name: Set package version for publish
@@ -231,8 +231,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Sync generated shared core
-        run: npm run sync:all
       - name: Create zip archive
         id: archive
         shell: bash
