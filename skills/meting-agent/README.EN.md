@@ -15,7 +15,18 @@
 
 ## Download
 
+### Manual Install
+
 Download from: [GitHub Releases](https://github.com/ELDment/Meting-Agent/releases)
+
+### Quick Install
+
+Use either command:
+
+```powershell
+npx -y skills add ELDment/Meting-Agent
+npx -y openskills install ELDment/Meting-Agent
+```
 
 ## Cookie Rules
 

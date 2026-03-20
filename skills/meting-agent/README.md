@@ -15,7 +15,18 @@
 
 ## 获取
 
+### 手动安装
+
 下载入口: [GitHub Releases](https://github.com/ELDment/Meting-Agent/releases)
+
+### 快捷安装
+
+任选一种方式：
+
+```powershell
+npx -y skills add ELDment/Meting-Agent
+npx -y openskills install ELDment/Meting-Agent
+```
 
 ## Cookie 规则
 
