@@ -13,7 +13,7 @@ export const serviceMetadata = Object.freeze({
   version,
   title: "Meting Agent",
   description:
-    "Search music and fetch song, album, artist, playlist, lyrics, cover, and play URL data across NetEase, Tencent, KuGou, Baidu, and Kuwo.",
+    "Search music and fetch song, album, artist, playlist, lyrics, cover, and play URL data across NetEase, Tencent, KuGou, and Kuwo.",
   websiteUrl: packageUrl,
 });
 
@@ -21,7 +21,6 @@ const platformCatalog = Object.freeze([
   { name: "NetEase Cloud Music", code: "netease" },
   { name: "Tencent Music", code: "tencent" },
   { name: "KuGou Music", code: "kugou" },
-  { name: "Baidu Music", code: "baidu" },
   { name: "Kuwo Music", code: "kuwo" },
 ]);
 
@@ -31,7 +30,6 @@ const cookieEnvNames = Object.freeze({
   netease: "METING_NETEASE_COOKIE",
   tencent: "METING_TENCENT_COOKIE",
   kugou: "METING_KUGOU_COOKIE",
-  baidu: "METING_BAIDU_COOKIE",
   kuwo: "METING_KUWO_COOKIE",
 });
 
@@ -276,10 +274,17 @@ export function CreateMcpServer() {
     server,
     "pic",
     "Get Cover Image",
-    "Get cover or picture url by id.",
+    "Get cover or picture url by id. For Tencent Music, prefer square sizes 300, 500, 800, or 1200 because other custom sizes may return 404.",
     WithCommonInput({
       id: z.string().min(1).describe("Picture id."),
-      size: z.number().int().positive().optional().describe("Optional picture size."),
+      size: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe(
+          "Optional picture size. Tencent Music cover URLs are most reliable with square sizes 300, 500, 800, or 1200; other sizes may return 404."
+        ),
     }),
     async (input) => {
       const meting = CreateClient(input.platform, input.cookie);

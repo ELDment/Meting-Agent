@@ -26,7 +26,7 @@ Unified interface:
 - `lyric`: Get lyrics by song ID
 - `pic`: Get a cover or image URL by resource ID
 
-Supported platforms: [NetEase Cloud Music](https://music.163.com/) (`netease`), [Tencent Music](https://y.qq.com/) (`tencent`), [Kugou Music](https://www.kugou.com/) (`kugou`), [Qianqian Music](https://music.taihe.com/) (`baidu`), [Kuwo Music](https://www.kuwo.cn/) (`kuwo`)
+Supported platforms: [NetEase Cloud Music](https://music.163.com/) (`netease`), [Tencent Music](https://y.qq.com/) (`tencent`), [Kugou Music](https://www.kugou.com/) (`kugou`), [Kuwo Music](https://www.kuwo.cn/) (`kuwo`)
 
 ## Docs
 
@@ -40,4 +40,4 @@ Thanks to **[metowolf/Meting](https://github.com/metowolf/Meting)** for the cros
 
 ---
 
-Keywords: MCP Server | Model Context Protocol | Music API | Node.js MCP | AI Tool Integration | AI Skills | Reusable Skills | NetEase Cloud Music | Tencent QQ Music | KuGou Music | Baidu Music | Taihe Music | Qianqian Music | Kuwo Music | Lyrics API | Playlist API
+Keywords: MCP Server | Model Context Protocol | Music API | Node.js MCP | AI Tool Integration | AI Skills | Reusable Skills | NetEase Cloud Music | Tencent QQ Music | KuGou Music | Kuwo Music | Lyrics API | Playlist API

@@ -141,7 +141,7 @@ export default class BaseProvider {
     }
 
     // 发送 HTTP 请求
-    await meting._curl(api.url, api.body);
+    await meting._curl(api.url, api.body, false, api.headers);
 
     // 如果不需要格式化，直接返回原始数据
     if (!meting.isFormat) {

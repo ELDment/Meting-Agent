@@ -30,9 +30,13 @@ description: Use when an AI agent needs direct music lookup capabilities through
 - `lyric --platform <code> --id <id>`
 - `pic --platform <code> --id <id> [--size <n>]`
 
+Tencent Music cover note:
+- For `pic --platform tencent`, prefer square sizes `300`, `500`, `800`, or `1200`.
+- Other square sizes appear unreliable and may return `404`, so do not assume arbitrary custom sizes will work.
+
 ## Configuration Rules
 
 - Follow the default cookie resolution order used by the program: `METING_<PLATFORM>_COOKIE` first, `METING_COOKIE` second, and `--cookie <value>` last.
 - Treat `METING_<PLATFORM>_COOKIE` and `METING_COOKIE` as environment variable names, not CLI options.
-- Available environment variables include `METING_NETEASE_COOKIE`, `METING_TENCENT_COOKIE`, `METING_KUGOU_COOKIE`, `METING_BAIDU_COOKIE`, `METING_KUWO_COOKIE`, and shared fallback `METING_COOKIE`.
+- Available environment variables include `METING_NETEASE_COOKIE`, `METING_TENCENT_COOKIE`, `METING_KUGOU_COOKIE`, `METING_KUWO_COOKIE`, and shared fallback `METING_COOKIE`.
 - Use CLI option `--cookie <value>` only when the call needs an explicit one-off override.
