@@ -46,7 +46,7 @@ Claude example:
         "METING_TENCENT_COOKIE": "uin=...; qm_keyst=...;",
         "METING_KUGOU_COOKIE": "KugooID=...; t=...; dfid=...; mid=...;",
         "METING_BAIDU_COOKIE": "...",
-        "METING_KUWO_COOKIE": "..."
+        "METING_KUWO_COOKIE": "HMACCOUNT=...; sid=...;"
       },
       "timeout": 60000
     }
@@ -69,7 +69,7 @@ env = {
     METING_TENCENT_COOKIE = "uin=...; qm_keyst=...;",
     METING_KUGOU_COOKIE = "KugooID=...; t=...; dfid=...; mid=...;",
     METING_BAIDU_COOKIE = "...",
-    METING_KUWO_COOKIE = "...",
+    METING_KUWO_COOKIE = "HMACCOUNT=...; sid=...;",
 }
 tool_timeout_sec = 60
 ```

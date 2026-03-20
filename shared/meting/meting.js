@@ -59,10 +59,10 @@ class Meting {
   }
 
   // HTTP 请求方法 - 使用 fetch API
-  async _curl(url, payload = null, headerOnly = false) {
+  async _curl(url, payload = null, headerOnly = false, extraHeaders = {}) {
     const requestOptions = {
       method: payload ? "POST" : "GET",
-      headers: { ...this.header },
+      headers: { ...this.header, ...extraHeaders },
     };
 
     // 处理请求体
