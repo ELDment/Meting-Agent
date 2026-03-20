@@ -4,7 +4,7 @@
 
 # Meting-Agent
 
-`Meting-Agent` 是基於 **[metowolf/Meting](https://github.com/metowolf/Meting)** 建構的 MCP 服務，支援 [網易雲音樂](https://music.163.com/)（`netease`）、[騰訊音樂](https://y.qq.com/)（`tencent`）、[酷狗音樂](https://www.kugou.com/)（`kugou`）、[千千音樂](https://music.taihe.com/)（`baidu`）、[酷我音樂](https://www.kuwo.cn/)（`kuwo`） 等音樂平台，提供搜尋、歌曲、專輯、歌手、歌單、播放連結、歌詞、封面等能力
+`Meting-Agent` 是基於 **[metowolf/Meting](https://github.com/metowolf/Meting)** 建構的 MCP 服務，支援 [網易雲音樂](https://music.163.com/)（`netease`）、[騰訊音樂](https://y.qq.com/)（`tencent`）、[酷狗音樂](https://www.kugou.com/)（`kugou`）、[酷我音樂](https://www.kuwo.cn/)（`kuwo`）等音樂平台，提供搜尋、歌曲、專輯、歌手、歌單、播放連結、歌詞、封面等能力
 
 <details>
 <summary><b>執行截圖</b></summary>
@@ -45,7 +45,6 @@ Claude 設定範例：
         "METING_NETEASE_COOKIE": "__csrf=...; MUSIC_U=...; NMTID=...;",
         "METING_TENCENT_COOKIE": "uin=...; qm_keyst=...;",
         "METING_KUGOU_COOKIE": "KugooID=...; t=...; dfid=...; mid=...;",
-        "METING_BAIDU_COOKIE": "...",
         "METING_KUWO_COOKIE": "HMACCOUNT=...; sid=...;"
       },
       "timeout": 60000
@@ -68,7 +67,6 @@ env = {
     METING_NETEASE_COOKIE = "__csrf=...; MUSIC_U=...; NMTID=...;",
     METING_TENCENT_COOKIE = "uin=...; qm_keyst=...;",
     METING_KUGOU_COOKIE = "KugooID=...; t=...; dfid=...; mid=...;",
-    METING_BAIDU_COOKIE = "...",
     METING_KUWO_COOKIE = "HMACCOUNT=...; sid=...;",
 }
 tool_timeout_sec = 60
@@ -87,7 +85,6 @@ tool_timeout_sec = 60
 - `METING_NETEASE_COOKIE`
 - `METING_TENCENT_COOKIE`
 - `METING_KUGOU_COOKIE`
-- `METING_BAIDU_COOKIE`
 - `METING_KUWO_COOKIE`
 - `METING_COOKIE`（通用）
 

@@ -1,13 +1,12 @@
 import Meting from "../shared/meting/meting.js";
 
-const supportedPlatforms = ["netease", "tencent", "kugou", "baidu", "kuwo"];
+const supportedPlatforms = ["netease", "tencent", "kugou", "kuwo"];
 const previewLength = 512;
 const defaultKeyword = "我怀念的";
 const cookieEnvNames = Object.freeze({
   netease: "METING_NETEASE_COOKIE",
   tencent: "METING_TENCENT_COOKIE",
   kugou: "METING_KUGOU_COOKIE",
-  baidu: "METING_BAIDU_COOKIE",
   kuwo: "METING_KUWO_COOKIE",
 });
 

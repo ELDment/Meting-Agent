@@ -26,7 +26,7 @@
 - `lyric`：依歌曲 ID 取得歌詞內容
 - `pic`：依資源 ID 取得封面或圖片連結
 
-支援平台：[網易雲音樂](https://music.163.com/)（`netease`）、[騰訊音樂](https://y.qq.com/)（`tencent`）、[酷狗音樂](https://www.kugou.com/)（`kugou`）、[千千音樂](https://music.taihe.com/)（`baidu`）、[酷我音樂](https://www.kuwo.cn/)（`kuwo`）
+支援平台：[網易雲音樂](https://music.163.com/)（`netease`）、[騰訊音樂](https://y.qq.com/)（`tencent`）、[酷狗音樂](https://www.kugou.com/)（`kugou`）、[酷我音樂](https://www.kuwo.cn/)（`kuwo`）
 
 ## 文件
 
@@ -40,4 +40,4 @@
 
 ---
 
-關鍵詞: MCP Server | Model Context Protocol | Music API | Node.js MCP | AI Tool Integration | AI Skills | Reusable Skills | NetEase Cloud Music | Tencent QQ Music | KuGou Music | Baidu Music | Taihe Music | Qianqian Music | Kuwo Music | Lyrics API | Playlist API
+關鍵詞: MCP Server | Model Context Protocol | Music API | Node.js MCP | AI Tool Integration | AI Skills | Reusable Skills | NetEase Cloud Music | Tencent QQ Music | KuGou Music | Kuwo Music | Lyrics API | Playlist API

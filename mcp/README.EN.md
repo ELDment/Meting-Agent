@@ -4,7 +4,7 @@
 
 # Meting-Agent
 
-`Meting-Agent` is an MCP service built on top of **[metowolf/Meting](https://github.com/metowolf/Meting)**. It supports music platforms such as [NetEase Cloud Music](https://music.163.com/) (`netease`), [Tencent Music](https://y.qq.com/) (`tencent`), [Kugou Music](https://www.kugou.com/) (`kugou`), [Qianqian Music](https://music.taihe.com/) (`baidu`), and [Kuwo Music](https://www.kuwo.cn/) (`kuwo`), and provides capabilities for search, songs, albums, artists, playlists, playback URLs, lyrics, and cover images.
+`Meting-Agent` is an MCP service built on top of **[metowolf/Meting](https://github.com/metowolf/Meting)**. It supports music platforms such as [NetEase Cloud Music](https://music.163.com/) (`netease`), [Tencent Music](https://y.qq.com/) (`tencent`), [Kugou Music](https://www.kugou.com/) (`kugou`), and [Kuwo Music](https://www.kuwo.cn/) (`kuwo`), and provides capabilities for search, songs, albums, artists, playlists, playback URLs, lyrics, and cover images.
 
 <details>
 <summary><b>Screenshot</b></summary>
@@ -45,7 +45,6 @@ Claude example:
         "METING_NETEASE_COOKIE": "__csrf=...; MUSIC_U=...; NMTID=...;",
         "METING_TENCENT_COOKIE": "uin=...; qm_keyst=...;",
         "METING_KUGOU_COOKIE": "KugooID=...; t=...; dfid=...; mid=...;",
-        "METING_BAIDU_COOKIE": "...",
         "METING_KUWO_COOKIE": "HMACCOUNT=...; sid=...;"
       },
       "timeout": 60000
@@ -68,7 +67,6 @@ env = {
     METING_NETEASE_COOKIE = "__csrf=...; MUSIC_U=...; NMTID=...;",
     METING_TENCENT_COOKIE = "uin=...; qm_keyst=...;",
     METING_KUGOU_COOKIE = "KugooID=...; t=...; dfid=...; mid=...;",
-    METING_BAIDU_COOKIE = "...",
     METING_KUWO_COOKIE = "HMACCOUNT=...; sid=...;",
 }
 tool_timeout_sec = 60
@@ -87,7 +85,6 @@ Supported environment variables:
 - `METING_NETEASE_COOKIE`
 - `METING_TENCENT_COOKIE`
 - `METING_KUGOU_COOKIE`
-- `METING_BAIDU_COOKIE`
 - `METING_KUWO_COOKIE`
 - `METING_COOKIE` (shared fallback)
 

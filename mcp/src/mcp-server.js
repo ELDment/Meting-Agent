@@ -13,7 +13,7 @@ export const serviceMetadata = Object.freeze({
   version,
   title: "Meting Agent",
   description:
-    "Search music and fetch song, album, artist, playlist, lyrics, cover, and play URL data across NetEase, Tencent, KuGou, Baidu, and Kuwo.",
+    "Search music and fetch song, album, artist, playlist, lyrics, cover, and play URL data across NetEase, Tencent, KuGou, and Kuwo.",
   websiteUrl: packageUrl,
 });
 
@@ -21,7 +21,6 @@ const platformCatalog = Object.freeze([
   { name: "NetEase Cloud Music", code: "netease" },
   { name: "Tencent Music", code: "tencent" },
   { name: "KuGou Music", code: "kugou" },
-  { name: "Baidu Music", code: "baidu" },
   { name: "Kuwo Music", code: "kuwo" },
 ]);
 
@@ -31,7 +30,6 @@ const cookieEnvNames = Object.freeze({
   netease: "METING_NETEASE_COOKIE",
   tencent: "METING_TENCENT_COOKIE",
   kugou: "METING_KUGOU_COOKIE",
-  baidu: "METING_BAIDU_COOKIE",
   kuwo: "METING_KUWO_COOKIE",
 });
 

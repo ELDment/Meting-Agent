@@ -1,7 +1,6 @@
 import NeteaseProvider from "./netease.js";
 import TencentProvider from "./tencent.js";
 import KugouProvider from "./kugou.js";
-import BaiduProvider from "./baidu.js";
 import KuwoProvider from "./kuwo.js";
 
 /**
@@ -12,7 +11,6 @@ export default class ProviderFactory {
     netease: NeteaseProvider,
     tencent: TencentProvider,
     kugou: KugouProvider,
-    baidu: BaiduProvider,
     kuwo: KuwoProvider,
   };
 
