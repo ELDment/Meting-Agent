@@ -43,7 +43,7 @@ Claude example:
       ],
       "env": {
         "METING_NETEASE_COOKIE": "__csrf=...; MUSIC_U=...; NMTID=...;",
-        "METING_TENCENT_COOKIE": "uin=...; qm_keyst=...; qqmusic_key=...;",
+        "METING_TENCENT_COOKIE": "uin=...; qm_keyst=...;",
         "METING_KUGOU_COOKIE": "KugooID=...; t=...; dfid=...; mid=...;",
         "METING_BAIDU_COOKIE": "...",
         "METING_KUWO_COOKIE": "..."
@@ -66,7 +66,7 @@ args = [
 ]
 env = {
     METING_NETEASE_COOKIE = "__csrf=...; MUSIC_U=...; NMTID=...;",
-    METING_TENCENT_COOKIE = "uin=...; qm_keyst=...; qqmusic_key=...;",
+    METING_TENCENT_COOKIE = "uin=...; qm_keyst=...;",
     METING_KUGOU_COOKIE = "KugooID=...; t=...; dfid=...; mid=...;",
     METING_BAIDU_COOKIE = "...",
     METING_KUWO_COOKIE = "...",

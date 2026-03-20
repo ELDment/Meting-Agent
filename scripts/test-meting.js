@@ -178,7 +178,7 @@ async function RunPlatformTest(platform, testKeyword) {
       },
     });
 
-    await RunJsonRequest("Picture", () => meting.pic(firstSong.pic_id, 200), {
+    await RunJsonRequest("Picture", () => meting.pic(firstSong.pic_id), {
       getStatus(result) {
         return result.url ? "Picture ok" : "Picture unavailable";
       },

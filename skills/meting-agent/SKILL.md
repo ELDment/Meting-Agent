@@ -30,6 +30,10 @@ description: Use when an AI agent needs direct music lookup capabilities through
 - `lyric --platform <code> --id <id>`
 - `pic --platform <code> --id <id> [--size <n>]`
 
+Tencent Music cover note:
+- For `pic --platform tencent`, prefer square sizes `300`, `500`, `800`, or `1200`.
+- Other square sizes appear unreliable and may return `404`, so do not assume arbitrary custom sizes will work.
+
 ## Configuration Rules
 
 - Follow the default cookie resolution order used by the program: `METING_<PLATFORM>_COOKIE` first, `METING_COOKIE` second, and `--cookie <value>` last.

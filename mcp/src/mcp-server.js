@@ -276,10 +276,17 @@ export function CreateMcpServer() {
     server,
     "pic",
     "Get Cover Image",
-    "Get cover or picture url by id.",
+    "Get cover or picture url by id. For Tencent Music, prefer square sizes 300, 500, 800, or 1200 because other custom sizes may return 404.",
     WithCommonInput({
       id: z.string().min(1).describe("Picture id."),
-      size: z.number().int().positive().optional().describe("Optional picture size."),
+      size: z
+        .number()
+        .int()
+        .positive()
+        .optional()
+        .describe(
+          "Optional picture size. Tencent Music cover URLs are most reliable with square sizes 300, 500, 800, or 1200; other sizes may return 404."
+        ),
     }),
     async (input) => {
       const meting = CreateClient(input.platform, input.cookie);
