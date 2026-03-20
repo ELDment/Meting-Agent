@@ -6,23 +6,23 @@
 
 This repository uses a "shared source + generated copies" maintenance model. Before you submit changes, understand the sync relationships first, or it is easy to modify the wrong location.
 
-## Why you cannot build immediately after cloning
+## Directory responsibilities
 
-The repository keeps the shared source by default. It does not commit the skill release artifacts, and it does not permanently maintain every runtime copy from `shared/meting/` inside each target directory.
+- `shared/meting/`: the only core implementation source
+- `skill-source/meting-agent/`: skill shell source, including `README`, `SKILL.md`, agent config, and CLI
+- `skills/meting-agent/`: committed generated directory kept for GitHub repository based one-click installation
+- `dist/skills/meting-agent/`: temporary release output, not committed
+- `mcp/src/meting/`: generated MCP runtime copy from `shared/meting/`
 
-After a fresh clone, you will hit two practical constraints:
-
-- The distributable skill artifacts live under `dist/skills/meting-agent/scripts/meting/`, and that directory is generated only after running the build script.
-- The `mcp/` build runs `sync:core` automatically inside its npm scripts, but if you skip the sync prerequisite and debug generated files directly, you can easily reach the wrong conclusion.
-
-The simplified mental model is: this repository does not keep a complete, static, directly maintained source copy inside every deliverable directory. You maintain `shared/meting/` first, then generate copies for `mcp/src/meting/` and the skill bundle.
+The simplified mental model is: the only maintainable source of truth is `shared/meting/` plus `skill-source/meting-agent/`. Even though `skills/meting-agent/` is committed, it is still generated and must not be edited directly.
 
 ## Recommended workflow
 
 1. Update core logic in `shared/meting/` first
-2. Run the sync script to generate the `mcp` copy
-3. Run the build script to generate the skill release bundle
-4. Verify the `mcp` package and the skill artifacts separately
+2. Update skill shell files in `skill-source/meting-agent/`
+3. Run the sync scripts to generate the `mcp` and `skills` copies
+4. Run the build script to generate the skill release bundle
+5. Verify the `mcp` package and the skill artifacts separately
 
 ## Common commands
 
@@ -32,10 +32,22 @@ Sync the shared core into `mcp/`:
 node scripts/sync-mcp-core.mjs
 ```
 
+Sync the committed skill install directory:
+
+```powershell
+node scripts/sync-skills.mjs
+```
+
 Build the skill release bundle:
 
 ```powershell
 node scripts/build-skill-release.mjs
+```
+
+Verify that `skills/` has not been edited manually:
+
+```powershell
+npm run verify:skills
 ```
 
 Verify root-level document formatting:
@@ -52,9 +64,16 @@ npm install
 npm run verify
 ```
 
+## `skills/` directory rules
+
+- `skills/meting-agent/` is a generated directory, not a handwritten source directory
+- Do not edit `skills/meting-agent/` directly; CI runs `node scripts/sync-skills.mjs` and fails if that directory changes
+- If you meant to edit `README.md`, `SKILL.md`, `scripts/meting-cli.mjs`, or `agents/openai.yaml`, edit `skill-source/meting-agent/` and sync again
+
 ## Pre-commit checklist
 
 - Did the core change happen in `shared/meting/`?
+- Did the skill shell change happen in `skill-source/meting-agent/` instead of `skills/meting-agent/`?
 - Did you regenerate the copies or artifacts that should be committed?
 - Did you finish `mcp` verification?
 - If you changed documents, did `npm run format:check` pass?
