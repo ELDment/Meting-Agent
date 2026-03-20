@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { access, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { access, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -56,13 +56,6 @@ async function WriteGeneratedCopy(sourceRoot, destinationRoot, relativePath) {
   const nextContent = `${generatedBanner}${sourceContent}`;
 
   await mkdir(dirname(targetPath), { recursive: true });
-
-  const currentContent = (await PathExists(targetPath)) ? await readFile(targetPath, "utf8") : null;
-
-  if (currentContent === nextContent) {
-    return;
-  }
-
   await writeFile(targetPath, nextContent, "utf8");
   process.stdout.write(
     `[sync-mcp] ${relative(repositoryRoot, sourcePath)} -> ${relative(repositoryRoot, targetPath)}\n`
@@ -74,6 +67,8 @@ async function Main() {
     process.stdout.write("[sync-mcp] shared/meting not found, skipping sync.\n");
     return;
   }
+
+  await rm(targetRoot, { recursive: true, force: true });
 
   const relativeFiles = await CollectRelativeFiles(sharedRoot);
 

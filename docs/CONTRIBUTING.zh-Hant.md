@@ -1,38 +1,45 @@
 <p align="right"><a href="./CONTRIBUTING.md">简体中文</a> | <strong>繁體中文</strong> | <a href="./CONTRIBUTING.EN.md">English</a></p>
 
-<p align="right"><a href="../README.md">⬅️ 返回首頁</a></p>
+<p align="right"><a href="../README.md">⬅️ 返回主頁</a></p>
 
 # CONTRIBUTING
 
-本倉庫採用「共享原始碼 + 生成副本」的維護方式。提交修改前，請先理解同步關係，否則很容易改到錯誤位置
+本倉庫採用「共享原始碼 + 生成副本」的維護方式。提交修改前，請先理解同步關係，否則很容易改錯位置。
 
-## 為什麼剛 clone 後不能直接編譯
+## 生成副本是怎麼維護的
 
-倉庫預設只保留共享原始碼，不提交 skill release 產物，也不會把 `shared/meting/` 的全部執行時副本長期維護在每個目標目錄中
+倉庫把 `shared/meting/` 視為唯一真源。`mcp/src/meting/` 和 `skills/meting-agent/scripts/meting/` 這兩個執行期副本，會在 `main` 和 `dev` 有新 push 後由 GitHub Actions 強制同步並回寫到分支。
 
-直接 clone 後會遇到兩個現實限制：
+這表示：
 
-- skill 的可分發產物位於 `dist/skills/meting-agent/scripts/meting/`，這個目錄需要執行建構腳本後才會生成
-- `mcp/` 的建構雖然會在其 npm scripts 中自動執行 `sync:core`，但如果你跳過同步前置步驟，直接從生成檔案視角排查問題，很容易得到錯誤結論
+- 之後再 clone `main` 或 `dev`，理論上會拿到 workflow 回寫後的最新副本。
+- 但你仍然不應該把這兩個生成目錄當作手動維護原始碼。手改它們，下一次 workflow 同步時仍可能被覆蓋。
+- `mcp/` 的 npm scripts 會自動執行 `sync:core`，但如果你跳過同步前置步驟，只盯著生成檔案排查問題，很容易得到錯誤結論。
 
-簡化理解就是：這個倉庫不是「每個交付物目錄都自帶完整、靜態、可直接維護的原始碼副本」，而是先維護 `shared/meting/`，再生成給 `mcp/src/meting/` 和 skill 使用的副本
+簡化理解就是：先維護 `shared/meting/`，生成目錄只用於驗證與發佈，而 `main/dev` 上的已追蹤副本由 GitHub Actions 負責正規化。
 
 ## 推薦修改流程
 
 1. 先在 `shared/meting/` 修改核心邏輯
-2. 執行同步腳本生成 `mcp` 副本
-3. 執行建構腳本生成 skill release bundle
-4. 分別驗證 `mcp` 與 skill 產物
+2. 執行同步腳本生成 `mcp` 和 skill 的本地副本
+3. 視需要驗證 `mcp` 套件與 skill 執行目錄
+4. push 到 `main` 或 `dev` 後，讓 GitHub Actions 覆蓋、提交並發佈同步後的副本
 
 ## 常用命令
 
-同步共享核心到 `mcp/`：
+同步兩個生成目錄：
+
+```powershell
+npm run sync:all
+```
+
+只同步 `mcp/` 副本：
 
 ```powershell
 node scripts/sync-mcp-core.mjs
 ```
 
-建構 skill release bundle：
+只同步 skill 副本：
 
 ```powershell
 node scripts/build-skill-release.mjs
@@ -55,6 +62,7 @@ npm run verify
 ## 提交前檢查
 
 - 核心改動是否發生在 `shared/meting/`
-- 是否重新生成了需要提交的副本或產物
+- 是否按驗證需要重新生成了本地副本
 - 是否完成 `mcp` 驗證
 - 如果改了文件，是否通過 `npm run format:check`
+- 是否避免把生成副本當作主要編輯目標

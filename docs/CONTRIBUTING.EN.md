@@ -6,33 +6,40 @@
 
 This repository uses a "shared source + generated copies" maintenance model. Before you submit changes, understand the sync relationships first, or it is easy to modify the wrong location.
 
-## Why you cannot build immediately after cloning
+## How generated copies are maintained
 
-The repository keeps the shared source by default. It does not commit the skill release artifacts, and it does not permanently maintain every runtime copy from `shared/meting/` inside each target directory.
+The repository uses `shared/meting/` as the source of truth. The generated runtime copies under `mcp/src/meting/` and `skills/meting-agent/scripts/meting/` are branch artifacts that GitHub Actions force-syncs after pushes to `main` and `dev`.
 
-After a fresh clone, you will hit two practical constraints:
+That means:
 
-- The distributable skill artifacts live under `dist/skills/meting-agent/scripts/meting/`, and that directory is generated only after running the build script.
-- The `mcp/` build runs `sync:core` automatically inside its npm scripts, but if you skip the sync prerequisite and debug generated files directly, you can easily reach the wrong conclusion.
+- A later clone of `main` or `dev` should receive the latest synced copies after the workflow has pushed them back.
+- You still should not treat those generated directories as hand-maintained source. Manual edits there can be overwritten by the next workflow sync.
+- The `mcp/` build runs `sync:core` automatically inside its npm scripts, but if you debug only the generated files and ignore `shared/meting/`, you can easily reach the wrong conclusion.
 
-The simplified mental model is: this repository does not keep a complete, static, directly maintained source copy inside every deliverable directory. You maintain `shared/meting/` first, then generate copies for `mcp/src/meting/` and the skill bundle.
+The simplified mental model is: maintain `shared/meting/` first, sync the generated copies only for verification or release, and let GitHub Actions normalize the tracked copies on `main` and `dev`.
 
 ## Recommended workflow
 
 1. Update core logic in `shared/meting/` first
-2. Run the sync script to generate the `mcp` copy
-3. Run the build script to generate the skill release bundle
-4. Verify the `mcp` package and the skill artifacts separately
+2. Run the sync scripts to generate the `mcp` and skill copies
+3. Verify the `mcp` package and the skill runtime files locally if needed
+4. Push to `main` or `dev`, then let GitHub Actions overwrite, commit, and publish the synced copies
 
 ## Common commands
 
-Sync the shared core into `mcp/`:
+Sync the shared core into both generated directories:
+
+```powershell
+npm run sync:all
+```
+
+Sync only the `mcp/` copy:
 
 ```powershell
 node scripts/sync-mcp-core.mjs
 ```
 
-Build the skill release bundle:
+Sync only the skill copy:
 
 ```powershell
 node scripts/build-skill-release.mjs
@@ -55,6 +62,7 @@ npm run verify
 ## Pre-commit checklist
 
 - Did the core change happen in `shared/meting/`?
-- Did you regenerate the copies or artifacts that should be committed?
+- Did you regenerate the local copies you needed for verification?
 - Did you finish `mcp` verification?
 - If you changed documents, did `npm run format:check` pass?
+- Did you avoid treating generated copies as the primary edit target?

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { access, cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { access, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,24 +12,12 @@ const generatedBanner = [
   "",
 ].join("\r\n");
 
-const staticFiles = Object.freeze([
-  "README.md",
-  "README.zh-Hant.md",
-  "README.EN.md",
-  "SKILL.md",
-  "agents/openai.yaml",
-  "scripts/package.json",
-  "scripts/meting-cli.mjs",
-]);
-
 const scriptPath = fileURLToPath(import.meta.url);
 const scriptDirectory = dirname(scriptPath);
 const repositoryRoot = resolve(scriptDirectory, "..");
 const sharedRoot = resolve(repositoryRoot, "shared", "meting");
-const skillSourceRoot = resolve(repositoryRoot, "skills", "meting-agent");
-const legacyOutputRoot = resolve(repositoryRoot, "dist", "meting-agent-skill");
-const outputRoot = resolve(repositoryRoot, "dist", "skills", "meting-agent");
-const outputMetingRoot = resolve(outputRoot, "scripts", "meting");
+const skillRoot = resolve(repositoryRoot, "skills", "meting-agent");
+const targetRoot = resolve(skillRoot, "scripts", "meting");
 
 async function PathExists(path) {
   try {
@@ -62,27 +50,16 @@ async function CollectRelativeFiles(rootPath, currentPath = rootPath) {
   return relativeFiles;
 }
 
-async function CopyStaticFile(relativePath) {
-  const sourcePath = resolve(skillSourceRoot, relativePath);
-  const targetPath = resolve(outputRoot, relativePath);
-
-  await mkdir(dirname(targetPath), { recursive: true });
-  await cp(sourcePath, targetPath, { force: true });
-  process.stdout.write(
-    `[build-skill] ${relative(repositoryRoot, sourcePath)} -> ${relative(repositoryRoot, targetPath)}\n`
-  );
-}
-
-async function CopyGeneratedCoreFile(relativePath) {
+async function WriteGeneratedCoreFile(relativePath) {
   const sourcePath = resolve(sharedRoot, relativePath);
-  const targetPath = resolve(outputMetingRoot, relativePath);
+  const targetPath = resolve(targetRoot, relativePath);
   const sourceContent = NormalizeContent(await readFile(sourcePath, "utf8"));
   const nextContent = `${generatedBanner}${sourceContent}`;
 
   await mkdir(dirname(targetPath), { recursive: true });
   await writeFile(targetPath, nextContent, "utf8");
   process.stdout.write(
-    `[build-skill] ${relative(repositoryRoot, sourcePath)} -> ${relative(repositoryRoot, targetPath)}\n`
+    `[sync-skill] ${relative(repositoryRoot, sourcePath)} -> ${relative(repositoryRoot, targetPath)}\n`
   );
 }
 
@@ -91,28 +68,22 @@ async function Main() {
     throw new Error("shared/meting not found.");
   }
 
-  if (!(await PathExists(skillSourceRoot))) {
+  if (!(await PathExists(skillRoot))) {
     throw new Error("skills/meting-agent not found.");
   }
 
-  await rm(legacyOutputRoot, { recursive: true, force: true });
-  await rm(outputRoot, { recursive: true, force: true });
-  await mkdir(outputRoot, { recursive: true });
-
-  for (const relativePath of staticFiles) {
-    await CopyStaticFile(relativePath);
-  }
+  await rm(targetRoot, { recursive: true, force: true });
 
   const relativeFiles = await CollectRelativeFiles(sharedRoot);
 
   for (const relativePath of relativeFiles) {
-    await CopyGeneratedCoreFile(relativePath);
+    await WriteGeneratedCoreFile(relativePath);
   }
 }
 
 Main().catch((error) => {
   process.stderr.write(
-    `[build-skill] failed: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}\n`
+    `[sync-skill] failed: ${error instanceof Error ? (error.stack ?? error.message) : String(error)}\n`
   );
   process.exit(1);
 });
