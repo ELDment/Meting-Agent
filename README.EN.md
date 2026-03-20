@@ -8,8 +8,9 @@
 - **Skill**: [skills/meting-agent](https://github.com/ELDment/Meting-Agent/releases)
 
 <details>
-<summary><b>Screenshot</b></summary>
+<summary><b>Screenshot 🎨</b></summary>
 
+![Meting-Agent Showcase](./SHOWCASE.OPENCLAW.png)
 ![Meting-Agent Showcase](./SHOWCASE.png)
 </details>
 
