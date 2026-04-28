@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/eldment-meting-agent-badge.png)](https://mseep.ai/app/eldment-meting-agent)
+
 <p align="right"><strong>简体中文</strong> | <a href="./README.zh-Hant.md">繁體中文</a> | <a href="./README.EN.md">English</a></p>
 
 # Meting-Agent
